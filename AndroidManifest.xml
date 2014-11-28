@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.nfc_writing"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-permission android:name="android.permission.NFC" />
+
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
+
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="21" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ActivityWriteUrl"
+            android:label="@string/title_activity_WriteUrl" >
+. 
+        </activity>
+        <activity
+            android:name=".ActivityMenuWrite"
+            android:label="@string/title_activity_MenuWrite" >
+. 
+        </activity>
+        <activity
+            android:name=".ActivityMenuRead"
+            android:label="@string/title_activity_MenuRead" >
+. 
+        </activity>
+        <activity
+            android:name=".ActivityReadUrl"
+            android:label="@string/title_activity_ReadUrl" >
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="*"
+                    android:pathPrefix=""
+                    android:scheme="http" />
+            </intent-filter>
+. 
+        </activity>
+    </application>
+
+</manifest>

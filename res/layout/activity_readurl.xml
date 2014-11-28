@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/FielText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="108dp"
+        android:ems="10"
+        android:paddingLeft="20dp"
+        android:textColor="@android:color/black"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/Open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/FielText"
+        android:layout_marginLeft="98dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/open" />
+
+    <Button
+        android:id="@+id/Back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/Open"
+        android:layout_alignRight="@+id/Open"
+        android:layout_centerVertical="true"
+        android:text="@string/MainMenu" />
+
+</RelativeLayout>

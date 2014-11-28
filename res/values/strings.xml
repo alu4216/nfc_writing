@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Tag Writter</string>
+    <string name="WriteUrl">WriteUrl</string>
+    <string name="action_settings">Settings</string>
+    <string name="Quit">Quit</string>
+    <string name="wURL">Write URL in the field</string>
+    <string name="title_activity_WriteUrl">Write of URL</string>
+    <string name="title_activity_MenuWrite">Choose one </string>
+    <string name="title_activity_MenuRead">Touch tag </string>
+    <string name="title_activity_ReadUrl">Read URL </string>
+    <string name="Save">Save and Write</string>
+    <string name="Choose">Choose one option</string>
+    <string name="Read">ReadTag</string>
+    <string name="Write">WriteTag</string>
+    <string name="MainMenu">Back</string>
+    <string name="Touch">Touch an NFC tag</string>
+    <string name="open">Open link</string>
+
+</resources>
