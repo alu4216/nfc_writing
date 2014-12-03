@@ -29,19 +29,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ActivityWriteUrl"
-            android:label="@string/title_activity_WriteUrl" >
-. 
-        </activity>
-        <activity
             android:name=".ActivityMenuWrite"
             android:label="@string/title_activity_MenuWrite" >
-. 
+        </activity>
+        <activity
+            android:name=".ActivityWriteUrl"
+            android:label="@string/title_activity_WriteUrl" >
+        </activity>
+        <activity
+            android:name=".ActivityWriteText"
+            android:label="@string/title_activity_WriteText" >
         </activity>
         <activity
             android:name=".ActivityMenuRead"
             android:label="@string/title_activity_MenuRead" >
-. 
         </activity>
         <activity
             android:name=".ActivityReadUrl"
@@ -56,7 +57,17 @@
                     android:pathPrefix=""
                     android:scheme="http" />
             </intent-filter>
-. 
+        </activity>
+        <activity
+            android:name=".ActivityReadText"
+            android:label="@string/title_activity_ReadText" >
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
         </activity>
     </application>
 

@@ -14,17 +14,13 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
 		final Button readButton = (Button)findViewById(R.id.ReadTag);
 		final Button writeButton = (Button)findViewById(R.id.WriteTag);
 		final Button quitButton = (Button)findViewById(R.id.Quit);
-
 		/*NfcAdapter mNfcAdapter=NfcAdapter.getDefaultAdapter(this);
 		if (mNfcAdapter == null) 
 		{ 
@@ -33,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
 			finish();
 			return;
 
-		} 
+		} z
 		else
 		{
 			Toast.makeText(this, "This device support NFC.", Toast.LENGTH_LONG).show();

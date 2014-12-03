@@ -22,16 +22,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ActivityWriteUrl extends Activity {
+public class ActivityWriteText extends Activity {
 
-	private String urlAddress;	
+	private String data;	
 	private NfcAdapter mNfcAdapter;
 	private PendingIntent mPendingIntent;
 	private IntentFilter[] mFilters;
 	private String [][]mTechLists;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_writeurl);
+		setContentView(R.layout.activity_writetext);
 
 		final Button write = (Button)findViewById(R.id.Save);
 		final EditText etxt = (EditText)findViewById(R.id.TxtNombre);
@@ -43,8 +43,8 @@ public class ActivityWriteUrl extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				urlAddress = etxt.getText().toString();
-				txt.setText("Touch NFC tag to write http://www."+urlAddress);
+				data = etxt.getText().toString();
+				txt.setText("Touch NFC tag to write Text Plain");
 				setupForenground();
 				//setupNdef();
 			}
@@ -69,24 +69,6 @@ public class ActivityWriteUrl extends Activity {
 		IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED); 
 		mFilters = new IntentFilter[] {ndef, }; 
 		mTechLists = new String[][] { new String[] { Ndef.class.getName() }, new String[] { NdefFormatable.class.getName() }};
-	}
-
-	private void setupNdef()
-	{
-		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()));
-		{
-			Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG); 
-			byte[] uriField = urlAddress.getBytes(Charset.forName("US-ASCII"));
-			byte[] payload = new byte[uriField.length + 1]; 
-			payload[0] = 0x01; System.arraycopy(uriField, 0, payload, 1, uriField.length); 
-			NdefRecord URIRecord = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_URI, new byte[0], payload);
-			NdefMessage newMessage= new NdefMessage(new NdefRecord[] { URIRecord }); 
-			writeNdefMessageToTag(newMessage, tag);
-
-			//WRITE DATA TO TAG
-			writeNdefMessageToTag(newMessage, tag);
-		}
-
 	}
 
 	//Write to tag
@@ -163,13 +145,22 @@ public class ActivityWriteUrl extends Activity {
 	public void onNewIntent(Intent intent) 
 	{ 
 		Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG); 
-		byte[] uriField = urlAddress.getBytes(Charset.forName("US-ASCII"));
-		byte[] payload = new byte[uriField.length + 1]; 
-		payload[0] = 0x01; 
-		System.arraycopy(uriField, 0, payload, 1, uriField.length); 
-		NdefRecord URIRecord = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_URI, new byte[0], payload);
-		NdefMessage newMessage= new NdefMessage(new NdefRecord[] { URIRecord }); 
-		//WRITE TO TAG
+		Locale locale= new Locale("en","US"); 
+		byte[] langBytes = locale.getLanguage().getBytes(Charset.forName("US-ASCII")); 
+		boolean encodeInUtf8=false;
+		Charset utfEncoding = encodeInUtf8 ? Charset.forName("UTF-8") : Charset.forName("UTF-16"); 
+		int utfBit = encodeInUtf8 ? 0 : (1 << 7); 
+		char status = (char) (utfBit + langBytes.length);  
+		byte[] textBytes = data.getBytes(utfEncoding);
+		byte[] data = new byte[1 + langBytes.length + textBytes.length]; data[0] = (byte) status; 
+		System.arraycopy(langBytes, 0, data, 1, langBytes.length); System.arraycopy(textBytes, 0, data, 1 + langBytes.length, textBytes.length);
+		NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], data);
+		NdefMessage newMessage= new NdefMessage(new NdefRecord[] { textRecord });
 		writeNdefMessageToTag(newMessage, tag);
+		
 	}
 }
+
+
+
+

@@ -16,6 +16,8 @@ public class ActivityMenuWrite extends Activity {
 
 		final Button writeUrl = (Button)findViewById(R.id.WriteUrl);
 		final Button quitButton = (Button)findViewById(R.id.Back);
+		final Button writeText = (Button)findViewById(R.id.WriteText);
+		
 		writeUrl.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -27,6 +29,18 @@ public class ActivityMenuWrite extends Activity {
 			}	
 
 		});
+		
+		writeText.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(ActivityMenuWrite.this,ActivityWriteText.class);
+				startActivity(intent);
+			}	
+
+		});
+		
 		quitButton.setOnClickListener(new OnClickListener() {
 
 			@Override
