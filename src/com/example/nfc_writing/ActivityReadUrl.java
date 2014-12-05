@@ -17,11 +17,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ActivityReadUrl extends Activity {
+public class ActivityReadUrl extends CommonMethods {
 
 	byte payloadHeader;
 	String payload;
-	
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_readurl);
@@ -29,7 +29,7 @@ public class ActivityReadUrl extends Activity {
 		final TextView txt = (TextView)findViewById(R.id.FielText);
 		final Button urlButton = (Button)findViewById(R.id.Open);
 		final Button quitButton = (Button)findViewById(R.id.Back);
-		
+
 		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()))
 		{
 
@@ -77,34 +77,4 @@ public class ActivityReadUrl extends Activity {
 		}); 
 	}
 
-	private NdefMessage[] getNdefMessages(Intent intent)
-	{
-		NdefMessage[] message = null;
-		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()))
-		{
-			Parcelable[] rawmessage = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-			if(rawmessage != null)
-			{
-				message = new NdefMessage[rawmessage.length];
-				for( int i = 0; i < rawmessage.length; i++)
-				{
-					message[i]= (NdefMessage) rawmessage[i];
-				}
-			}
-			else
-			{
-				byte[] empty = new byte [] {};
-				NdefRecord record = new NdefRecord(NdefRecord.TNF_UNKNOWN,empty,empty,empty);
-				NdefMessage msg = new NdefMessage(new NdefRecord[]{record});
-				message = new NdefMessage[]{msg};
-			}
-		}
-		else
-		{
-			Log.d("","Unknow intent.");
-			finish();
-		}
-		return message;
-
-	}
 }

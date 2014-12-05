@@ -29,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
 			finish();
 			return;
 
-		} z
+		} 
 		else
 		{
 			Toast.makeText(this, "This device support NFC.", Toast.LENGTH_LONG).show();
