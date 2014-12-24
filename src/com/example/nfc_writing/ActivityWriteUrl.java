@@ -1,10 +1,5 @@
 package com.example.nfc_writing;
-
-import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Locale;
-
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -20,7 +15,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ActivityWriteUrl extends CommonMethods {
 
@@ -29,6 +23,7 @@ public class ActivityWriteUrl extends CommonMethods {
 	private PendingIntent mPendingIntent;
 	private IntentFilter[] mFilters;
 	private String [][]mTechLists;
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_writeurl);
@@ -48,7 +43,6 @@ public class ActivityWriteUrl extends CommonMethods {
 				setupForenground();
 				//setupNdef();
 			}
-
 		});
 		quitButton.setOnClickListener(new OnClickListener() {
 
@@ -69,7 +63,7 @@ public class ActivityWriteUrl extends CommonMethods {
 		mTechLists = new String[][] { new String[] { Ndef.class.getName() }, new String[] { NdefFormatable.class.getName() }};
 	}
 
-	private void setupNdef()
+	/*private void setupNdef()
 	{
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()));
 		{
@@ -84,7 +78,7 @@ public class ActivityWriteUrl extends CommonMethods {
 			writeNdefMessageToTag(newMessage, tag);
 		}
 
-	}
+	}*/
 
 	@Override
 	public void onPause()

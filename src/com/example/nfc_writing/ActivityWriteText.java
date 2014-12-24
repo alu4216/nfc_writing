@@ -1,10 +1,7 @@
 package com.example.nfc_writing;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Locale;
-
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -20,7 +17,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ActivityWriteText extends CommonMethods {
 
@@ -41,8 +37,7 @@ public class ActivityWriteText extends CommonMethods {
 		write.setOnClickListener(new OnClickListener() {		
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
+				// TODO Auto-generated method stub	
 				data = etxt.getText().toString();
 				txt.setText("Touch NFC tag to write Text Plain");
 				setupForenground();

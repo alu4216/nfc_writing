@@ -52,4 +52,16 @@
         android:textColor="@android:color/black"
         android:textSize="15sp" />
 
+    <Button
+        android:id="@+id/CreateIdentifier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/WriteTag"
+        android:layout_alignRight="@+id/WriteTag"
+        android:layout_below="@+id/WriteTag"
+        android:layout_marginTop="18dp"
+        android:text="@string/create_identifier" 
+        android:width="250dp" />
+        
+
 </RelativeLayout>

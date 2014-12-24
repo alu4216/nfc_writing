@@ -1,7 +1,6 @@
 package com.example.nfc_writing;
 
 import android.content.Intent;
-import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -9,7 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
+
 
 
 public class MainActivity extends ActionBarActivity {
@@ -21,6 +20,7 @@ public class MainActivity extends ActionBarActivity {
 		final Button readButton = (Button)findViewById(R.id.ReadTag);
 		final Button writeButton = (Button)findViewById(R.id.WriteTag);
 		final Button quitButton = (Button)findViewById(R.id.Quit);
+		final Button createIdentifier = (Button)findViewById(R.id.CreateIdentifier);
 		/*NfcAdapter mNfcAdapter=NfcAdapter.getDefaultAdapter(this);
 		if (mNfcAdapter == null) 
 		{ 
@@ -47,7 +47,7 @@ public class MainActivity extends ActionBarActivity {
 
 			}
 		});
-		
+
 		readButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -55,6 +55,17 @@ public class MainActivity extends ActionBarActivity {
 				// TODO Auto-generated method stub
 
 				Intent intent = new Intent(MainActivity.this,ActivityMenuRead.class);
+				startActivity(intent);
+
+			}
+		});
+
+		createIdentifier.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(MainActivity.this,ActivityIdentifier.class);
 				startActivity(intent);
 
 			}
