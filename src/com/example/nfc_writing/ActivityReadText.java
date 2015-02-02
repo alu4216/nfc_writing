@@ -1,7 +1,15 @@
 package com.example.nfc_writing;
 
 import java.nio.charset.Charset;
+import java.util.ResourceBundle;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -17,12 +25,19 @@ public class ActivityReadText extends CommonMethods {
 	String aux;
 	byte statusByte;
 	String payload = null;
+	String tipo;
+	Boolean bool;
+
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_readtext);
 		final TextView txt = (TextView)findViewById(R.id.txt);
 		final Button quitButton = (Button)findViewById(R.id.Back);
+		SharedPreferences prefs = getSharedPreferences("MyPreferences",Context.MODE_PRIVATE);
+		bool = prefs.getBoolean("LMactive",false); 
+		tipo = prefs.getString("Lmultiple", "vacio");
+		int orientation = getResources().getConfiguration().orientation;
 
 		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()))
 		{
@@ -63,9 +78,49 @@ public class ActivityReadText extends CommonMethods {
 				} 
 			} 
 
+			Database myDatabase = new Database(this, "DB", null, 1);
+			SQLiteDatabase db = myDatabase.getWritableDatabase();
+
+			if(db!=null)
+			{
+				if(orientation == 1)
+				{
+					if(bool == false)
+					{ 
+						ContentValues nuevoRegistro = new ContentValues();
+						nuevoRegistro.put("nombre",payload);
+						nuevoRegistro.put("tipo","null");
+						db.insert("WorkFlow", null, nuevoRegistro);
+					}
+					else
+					{
+						ContentValues nuevoRegistro = new ContentValues();
+						nuevoRegistro.put("nombre",payload);
+						nuevoRegistro.put("tipo",tipo);
+						db.insert("WorkFlow", null, nuevoRegistro);
+					}
+					txt.setText(myText+","+tipo);
+				}
+				else
+				{
+					StringBuffer prueba = new StringBuffer();
+					String[] campos = new String[] {"*"};
+					String[] args = new String[] {tipo};
+					Cursor c = db.query("WorkFlow", campos, "tipo=?", args, null, null, null);
+					if (c.moveToFirst()) {
+						//Recorremos el cursor hasta que no haya más registros
+						do {
+							String nombre= c.getString(0);
+							String tipo = c.getString(1);
+							prueba.append(nombre+","+tipo+"\n");
+						} while(c.moveToNext());
+					}
+					txt.setText(prueba);
+				}
+				db.close();
+			}
 		}
 
-		txt.setText(myText);
 		quitButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -74,6 +129,10 @@ public class ActivityReadText extends CommonMethods {
 				finish();
 			}
 		}); 
+	}
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
 	}
 
 }

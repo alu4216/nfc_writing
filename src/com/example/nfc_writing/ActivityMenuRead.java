@@ -19,9 +19,6 @@ public class ActivityMenuRead extends Activity {
 		//Intent intent = new Intent(ActivityMenuRead.this,ActivityReadText.class);
 		//startActivity(intent);
 		final Button quitButton = (Button)findViewById(R.id.Quit);
-
-
-
 		quitButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -31,7 +28,7 @@ public class ActivityMenuRead extends Activity {
 			}
 		}); 
 	}
-
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
@@ -41,9 +38,9 @@ public class ActivityMenuRead extends Activity {
 		case KeyEvent.KEYCODE_VOLUME_DOWN:
 			SharedPreferences prefs = getSharedPreferences("MyPreferences",Context.MODE_PRIVATE);
 			Boolean bool = prefs.getBoolean("LMactive",false); 
-			String txt = prefs.getString("Lmultiple", "caca");
+			String txt = prefs.getString("Lmultiple", "vacio");
 			SharedPreferences.Editor editor = prefs.edit();
-			
+
 			if(bool == true)
 			{
 				editor.putBoolean("LMactive", false);

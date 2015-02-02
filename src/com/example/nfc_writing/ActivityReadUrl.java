@@ -17,7 +17,7 @@ public class ActivityReadUrl extends CommonMethods {
 
 	byte payloadHeader;
 	String payload;
-
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_readurl);
