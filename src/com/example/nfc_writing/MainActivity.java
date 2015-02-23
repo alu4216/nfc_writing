@@ -31,12 +31,15 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
-
 public class MainActivity extends ActionBarActivity {
 
+	boolean  reciver;
 	ProgressDialog prgDialog;
 	HashMap<String, String> queryValues;
-	Database mydatabase =  new Database(this, "DB", null, 1);
+	Database mydatabase;
+	Intent alarmIntent;
+	PendingIntent pendingIntent;
+	AlarmManager alarmManager;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,19 +48,15 @@ public class MainActivity extends ActionBarActivity {
 		final Button writeButton = (Button)findViewById(R.id.WriteTag);
 		final Button quitButton = (Button)findViewById(R.id.Quit);
 		final Button createIdentifier = (Button)findViewById(R.id.CreateIdentifier);
+
 		prgDialog = new ProgressDialog(this);
 		prgDialog.setMessage("Transferring Data from Remote MySQL DB and Syncing SQLite. Please wait...");
 		prgDialog.setCancelable(false);
-		
-		/*// BroadCase Receiver Intent Object
-		Intent alarmIntent = new Intent(getApplicationContext(), SampleBC.class);
-		// Pending Intent Object
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		// Alarm Manager Object
-		AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-		// Alarm Manager calls BroadCast for every Ten seconds (10 * 1000), BroadCase further calls service to check if new records are inserted in 
-		// Remote MySQL DB
-		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 5000, 10 * 1000, pendingIntent);*/
+		reciver = false;
+		mydatabase =  new Database(this, "DB", null, 1);
+
+	
+
 		/*NfcAdapter mNfcAdapter=NfcAdapter.getDefaultAdapter(this);
 		if (mNfcAdapter == null) 
 		{ 
@@ -72,6 +71,15 @@ public class MainActivity extends ActionBarActivity {
 			Toast.makeText(this, "This device support NFC.", Toast.LENGTH_LONG).show();
 
 		}*/
+
+		// BroadCase Receiver Intent Object
+		// Alarm Manager Object
+		alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+		alarmIntent = new Intent(getApplicationContext(), SampleBC.class);
+		// Pending Intent Object
+		pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
 
 		writeButton.setOnClickListener(new OnClickListener() {
 
@@ -119,7 +127,6 @@ public class MainActivity extends ActionBarActivity {
 		}); 
 	}
 
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -138,9 +145,37 @@ public class MainActivity extends ActionBarActivity {
 			return true;
 		case R.id.action_settings:
 			return true;
+		case R.id.reciver:
+			if(reciver == false)
+			{
+				reciver = true;
+				activeReciver(reciver);
+			}
+			else
+			{
+				reciver = false;
+				activeReciver(reciver);
+			}
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	public void activeReciver(boolean reciver)
+	{
+		if(reciver == true)
+		{
+			// Alarm Manager calls BroadCast for every Ten seconds (10 * 1000), BroadCase further calls service to check if new records are inserted in 
+			// Remote MySQL DB
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 5000, 10 * 1000, pendingIntent);
+			Toast.makeText(getApplicationContext(), "Reciver active", Toast.LENGTH_LONG).show();
+		}
+		else
+		{
+			alarmManager.cancel(pendingIntent);
+			Toast.makeText(getApplicationContext(), "Disable active", Toast.LENGTH_LONG).show();
+		}
+
 	}
 	public void syncSQLiteMySQLDB() {
 		// Create AsycHttpClient object
@@ -235,7 +270,7 @@ public class MainActivity extends ActionBarActivity {
 		params.put("sincro", json);
 		// Make Http call to updatesyncsts.php with JSON parameter which has Sync statuses of Users
 		client.post("http://192.168.0.10:80/nfc/updatesyncsts.php", params, new AsyncHttpResponseHandler() {
-			
+
 			@Override
 			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
 					Throwable arg3) {

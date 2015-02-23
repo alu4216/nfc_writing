@@ -26,6 +26,7 @@
     <string name="ReadText">Text Plain:</string>
     <string name="id_text">Create identifier:</string>
     <string name="refresh">refresh</string>
+    <string name="reciver">reciver</string>
     <string name="create_identifier">Create Identifier</string>
 
 </resources>

@@ -20,13 +20,13 @@ import android.widget.TextView;
 
 public class ActivityReadText extends CommonMethods {
 
-	StringBuffer myText = new StringBuffer();
+	StringBuffer myText;
 	String aux;
 	byte statusByte;
-	String payload = null;
+	String payload; 
 	String tipo;
 	Boolean bool;
-	Database myDatabase = new Database(this, "DB", null, 1);
+	Database myDatabase; 
 	HashMap<String, String> queryValues;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,10 @@ public class ActivityReadText extends CommonMethods {
 		SharedPreferences prefs = getSharedPreferences("MyPreferences",Context.MODE_PRIVATE);
 		bool = prefs.getBoolean("LMactive",false); 
 		tipo = prefs.getString("Lmultiple", "vacio");
+		payload = null;
+		myText = new StringBuffer();
+		myDatabase = new Database(this, "DB", null, 1);
+		
 		int orientation = getResources().getConfiguration().orientation;
 
 		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()))

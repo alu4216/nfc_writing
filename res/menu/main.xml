@@ -12,5 +12,11 @@
         android:orderInCategory="100"
         app:showAsAction="always"
         android:title="@string/refresh"/>
+    
+    <item
+        android:id="@+id/reciver"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/reciver"/>
 
 </menu>
