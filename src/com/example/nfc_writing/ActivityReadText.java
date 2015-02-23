@@ -1,13 +1,12 @@
 package com.example.nfc_writing;
 
 import java.nio.charset.Charset;
-import java.util.ResourceBundle;
+import java.util.HashMap;
 
-import android.content.ContentValues;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.nfc.NdefMessage;
@@ -27,7 +26,8 @@ public class ActivityReadText extends CommonMethods {
 	String payload = null;
 	String tipo;
 	Boolean bool;
-
+	Database myDatabase = new Database(this, "DB", null, 1);
+	HashMap<String, String> queryValues;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,47 +78,47 @@ public class ActivityReadText extends CommonMethods {
 				} 
 			} 
 
-			Database myDatabase = new Database(this, "DB", null, 1);
-			SQLiteDatabase db = myDatabase.getWritableDatabase();
+			queryValues = new HashMap<String, String>();
 
-			if(db!=null)
+			if(orientation == 1)
 			{
-				if(orientation == 1)
-				{
-					if(bool == false)
-					{ 
-						ContentValues nuevoRegistro = new ContentValues();
-						nuevoRegistro.put("nombre",payload);
-						nuevoRegistro.put("tipo","null");
-						db.insert("WorkFlow", null, nuevoRegistro);
-					}
-					else
-					{
-						ContentValues nuevoRegistro = new ContentValues();
-						nuevoRegistro.put("nombre",payload);
-						nuevoRegistro.put("tipo",tipo);
-						db.insert("WorkFlow", null, nuevoRegistro);
-					}
-					txt.setText(myText+","+tipo);
+				if(bool == false)
+				{ 
+					queryValues.put("nombre",payload);
+					queryValues.put("tipo",null);
+					queryValues.put("sincro","0");
+					myDatabase.insert(queryValues);
+					txt.setText(myText+","+null);
 				}
 				else
 				{
-					StringBuffer prueba = new StringBuffer();
-					String[] campos = new String[] {"*"};
-					String[] args = new String[] {tipo};
-					Cursor c = db.query("WorkFlow", campos, "tipo=?", args, null, null, null);
-					if (c.moveToFirst()) {
-						//Recorremos el cursor hasta que no haya más registros
-						do {
-							String nombre= c.getString(0);
-							String tipo = c.getString(1);
-							prueba.append(nombre+","+tipo+"\n");
-						} while(c.moveToNext());
-					}
-					txt.setText(prueba);
+					queryValues.put("nombre",payload);
+					queryValues.put("tipo",tipo);
+					queryValues.put("sincro","0");
+					myDatabase.insert(queryValues);
+					txt.setText(myText+","+tipo);
 				}
-				db.close();
+				
 			}
+			else
+			{	
+				SQLiteDatabase db = myDatabase.getWritableDatabase();
+				StringBuffer prueba = new StringBuffer();
+				String[] campos = new String[] {"*"};
+				String[] args = new String[] {payload};
+				Cursor c = db.query("WorkFlow", campos, "nombre=?", args, null, null, null);
+				if (c.moveToFirst()) {
+					//Recorremos el cursor hasta que no haya más registros
+					do {
+						String nombre= c.getString(0);
+						String tipo = c.getString(1);
+						String sincro = c.getString(2);
+						prueba.append(nombre+","+tipo+","+sincro+"\n");
+					} while(c.moveToNext());
+				}
+				txt.setText("Read TAG :"+payload+"\n"+"List:\n"+prueba);
+			}
+
 		}
 
 		quitButton.setOnClickListener(new OnClickListener() {
