@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +41,8 @@ public class MainActivity extends ActionBarActivity {
 	Intent alarmIntent;
 	PendingIntent pendingIntent;
 	AlarmManager alarmManager;
+	boolean bandera;
+	boolean bandera1;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,12 +53,11 @@ public class MainActivity extends ActionBarActivity {
 		final Button createIdentifier = (Button)findViewById(R.id.CreateIdentifier);
 
 		prgDialog = new ProgressDialog(this);
-		prgDialog.setMessage("Transferring Data from Remote MySQL DB and Syncing SQLite. Please wait...");
+		prgDialog.setMessage("Transferring Data between Remote MySQL DB and Squilite mobile phone DB.Please wait...");
 		prgDialog.setCancelable(false);
 		reciver = false;
 		mydatabase =  new Database(this, "DB", null, 1);
 
-	
 
 		/*NfcAdapter mNfcAdapter=NfcAdapter.getDefaultAdapter(this);
 		if (mNfcAdapter == null) 
@@ -141,7 +143,20 @@ public class MainActivity extends ActionBarActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch (item.getItemId()) {
 		case R.id.refresh:
-			syncSQLiteMySQLDB();
+			prgDialog.show();
+			syncSQLiteMySQLDB(); //Sincronización móvil.Web envía datos al movil.
+			syncMySQLDBSQLite(); //Sincronización web.móvil envía datos a la web. 
+		
+			if(bandera1 == true && bandera==true)
+			{
+				prgDialog.dismiss();
+				Toast.makeText(getApplicationContext(), "Sync has been completed", Toast.LENGTH_LONG).show();
+			}
+			else
+			{
+				prgDialog.dismiss();
+				Toast.makeText(getApplicationContext(), "Sync has failed", Toast.LENGTH_LONG).show();
+			}
 			return true;
 		case R.id.action_settings:
 			return true;
@@ -177,20 +192,21 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 	}
+	/*
+	 * MySql to SQlite
+	 */
 	public void syncSQLiteMySQLDB() {
 		// Create AsycHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
 		// Http Request Params Object
 		RequestParams params = new RequestParams();
-		// Show ProgressBar
-		prgDialog.show();
 		// Make Http call to getusers.php
+		bandera = true;
 		client.post("http://192.168.0.10:80/nfc/getusers.php", params, new AsyncHttpResponseHandler() {
-
 			@Override
-			public void onFailure(int statusCode, Header[] content, byte[] arg2,
-					Throwable error) {
+			public void onFailure(int statusCode, Header[] content, byte[] arg2, Throwable error) {
 				prgDialog.hide();
+				bandera = false;
 				if (statusCode == 404) {
 					Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
 				} else if (statusCode == 500) {
@@ -203,16 +219,17 @@ public class MainActivity extends ActionBarActivity {
 			}
 			@Override
 			public void onSuccess(int arg0, Header[] response, byte[] arg2) {
-				// Hide ProgressBar
-				prgDialog.hide();
+
 				try {
 					String cadena = new String(arg2,"UTF-8");
+					// Update SQLite DB with response sent by getusers.php
 					updateSQLite(cadena);
+
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				// Update SQLite DB with response sent by getusers.php
+
 
 			}
 		});
@@ -275,18 +292,83 @@ public class MainActivity extends ActionBarActivity {
 			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
 					Throwable arg3) {
 				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), "Error Occured", Toast.LENGTH_LONG).show();
-
+				prgDialog.hide();
+				Toast.makeText(getApplicationContext(), "Error Occured to inform the MysQL DB", Toast.LENGTH_LONG).show();
+				bandera = false;
 			}
 
 			@Override
 			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
 				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), "MySQL DB has been informed about Sync activity", Toast.LENGTH_LONG).show();
-
-
 			}
 		});
 	}
 
+	/*
+	 * SQLite to MySql
+	 */
+	public void syncMySQLDBSQLite(){
+		//Create AsycHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+		RequestParams params = new RequestParams();
+		ArrayList<HashMap<String, String>> userList =  mydatabase.getAllData();
+		bandera1 = true;
+		if(userList.size()!=0){
+			if(mydatabase.dbSyncCount() != 0){
+				prgDialog.show();
+				params.put("usersJSON",mydatabase.composeJSONfromSQLite());
+				client.post("http://192.168.0.10:80/nfc/insertuser_.php",params ,new AsyncHttpResponseHandler() {
+
+					@Override
+					public void onFailure(int statusCode, Header[] arg1, byte[] arg2, Throwable arg3) {
+						// TODO Auto-generated method stub
+						prgDialog.hide();
+						bandera1 = false;
+						if(statusCode == 404){
+							Toast.makeText(getApplicationContext(), "Requested resource not found 2", Toast.LENGTH_LONG).show();
+						}else if(statusCode == 500){
+							Toast.makeText(getApplicationContext(), "Something went wrong at server end 2", Toast.LENGTH_LONG).show();
+						}else{
+							Toast.makeText(getApplicationContext(), "Unexpected Error occcured 2! [Most common Error: Device might not be connected to Internet]", Toast.LENGTH_LONG).show();
+						}
+
+					}
+
+					@Override
+					public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+						// TODO Auto-generated method stub
+						String cadena;
+						try {
+							cadena = new String(arg2,"UTF-8");
+							System.out.println(cadena);
+							try {
+								JSONArray arr = new JSONArray(cadena);
+								System.out.println(arr.length());
+								for(int i=0; i<arr.length();i++){
+									JSONObject obj = (JSONObject)arr.get(i);
+									System.out.println(obj.get("nombre"));
+									System.out.println(obj.get("tipo"));
+									mydatabase.updateSyncStatus(obj.get("nombre").toString(),obj.get("tipo").toString());
+								}
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								prgDialog.hide();
+								Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+								e.printStackTrace();
+							}
+
+						} catch (UnsupportedEncodingException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				});
+			}
+		}
+
+	}
 }
+
+
+
+

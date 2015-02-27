@@ -3,12 +3,16 @@ package com.example.nfc_writing;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class Database extends SQLiteOpenHelper {
 
@@ -54,7 +58,7 @@ public class Database extends SQLiteOpenHelper {
 	public ArrayList<HashMap<String, String>> getAllData() {
 		ArrayList<HashMap<String, String>> usersList;
 		usersList = new ArrayList<HashMap<String, String>>();
-		String selectQuery = "SELECT  * FROM users";
+		String selectQuery = "SELECT  * FROM WorkFlow";
 		SQLiteDatabase database = this.getWritableDatabase();
 		Cursor cursor = database.rawQuery(selectQuery, null);
 		if (cursor.moveToFirst()) {
@@ -69,7 +73,59 @@ public class Database extends SQLiteOpenHelper {
 		database.close();
 		return usersList;
 	}
+	/**
+	 * Compose JSON out of SQLite records
+	 * @return
+	 */
+	public String composeJSONfromSQLite(){
+		ArrayList<HashMap<String, String>> wordList;
+		wordList = new ArrayList<HashMap<String, String>>();
+		String selectQuery = "SELECT  * FROM WorkFlow where sincro ='0'";
+		SQLiteDatabase database = this.getWritableDatabase();
+		Cursor cursor = database.rawQuery(selectQuery, null);
+		if (cursor.moveToFirst()) {
+			do {
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("nombre", cursor.getString(0));
+				map.put("tipo", cursor.getString(1));
+				map.put("sincro", "1");
+				wordList.add(map);
+				System.out.println("nombre: "+map.get("nombre"));
+				System.out.println("tipo: "+map.get("tipo"));
+				System.out.println("sincro: "+map.get("sincro"));
+			} while (cursor.moveToNext());
+		}
+		database.close();
+		Gson gson = new GsonBuilder().create();
+		//Use GSON to serialize Array List to JSON
+		return gson.toJson(wordList);
+	}
+	public int dbSyncCount(){
+		int count = 0;
+		String selectQuery = "SELECT * FROM WorkFlow where sincro ='0' ";
+		SQLiteDatabase database = this.getWritableDatabase();
+		Cursor cursor = database.rawQuery(selectQuery, null);
+		count = cursor.getCount();
+		database.close();
+		return count;
+	}
 
-
-
+	/**
+	 * Update Sync status against 
+	 * @param nombre
+	 * @param tipo
+	 */
+	public void updateSyncStatus(String nombre, String tipo){
+		SQLiteDatabase database = this.getWritableDatabase();    
+		
+		String query = new String("Update WorkFlow set sincro = '1' where nombre="+"'"+nombre+"'");//"+nombre);//+ "&& tipo="+tipo);
+		//String updateQuery = "Update users set sincro = '"+ status +"' where userId="+"'"+ id +"'";
+		Log.d("query",query);        
+		database.execSQL(query);
+		database.close();
+	}
 }
+
+
+
+
