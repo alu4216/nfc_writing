@@ -10,26 +10,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -41,8 +41,6 @@ public class MainActivity extends ActionBarActivity {
 	Intent alarmIntent;
 	PendingIntent pendingIntent;
 	AlarmManager alarmManager;
-	boolean bandera;
-	boolean bandera1;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,7 +49,6 @@ public class MainActivity extends ActionBarActivity {
 		final Button writeButton = (Button)findViewById(R.id.WriteTag);
 		final Button quitButton = (Button)findViewById(R.id.Quit);
 		final Button createIdentifier = (Button)findViewById(R.id.CreateIdentifier);
-
 		prgDialog = new ProgressDialog(this);
 		prgDialog.setMessage("Transferring Data between Remote MySQL DB and Squilite mobile phone DB.Please wait...");
 		prgDialog.setCancelable(false);
@@ -126,7 +123,8 @@ public class MainActivity extends ActionBarActivity {
 				// TODO Auto-generated method stub
 				finish();
 			}
-		}); 
+		});	
+		
 	}
 
 	@Override
@@ -144,19 +142,16 @@ public class MainActivity extends ActionBarActivity {
 		switch (item.getItemId()) {
 		case R.id.refresh:
 			prgDialog.show();
-			syncSQLiteMySQLDB(); //Sincronización móvil.Web envía datos al movil.
+			Handler handler = new Handler();
+			handler.postDelayed(new Runnable() {
+			    public void run() {
+			        prgDialog.hide();
+			        Intent intent = new Intent(MainActivity.this,ActivityShowDB.class);
+					startActivity(intent);
+			    }}, 3000); 
 			syncMySQLDBSQLite(); //Sincronización web.móvil envía datos a la web. 
-		
-			if(bandera1 == true && bandera==true)
-			{
-				prgDialog.dismiss();
-				Toast.makeText(getApplicationContext(), "Sync has been completed", Toast.LENGTH_LONG).show();
-			}
-			else
-			{
-				prgDialog.dismiss();
-				Toast.makeText(getApplicationContext(), "Sync has failed", Toast.LENGTH_LONG).show();
-			}
+			syncSQLiteMySQLDB(); //Sincronización móvil.Web envía datos al movil.
+			
 			return true;
 		case R.id.action_settings:
 			return true;
@@ -192,21 +187,20 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 	}
-	/*
-	 * MySql to SQlite
-	 */
+	/****************************************************************************************************************************************************
+	 * MySql to SQlite																																	*
+	 ***************************************************************************************************************************************************/
 	public void syncSQLiteMySQLDB() {
 		// Create AsycHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
 		// Http Request Params Object
 		RequestParams params = new RequestParams();
 		// Make Http call to getusers.php
-		bandera = true;
+
 		client.post("http://192.168.0.10:80/nfc/getusers.php", params, new AsyncHttpResponseHandler() {
 			@Override
 			public void onFailure(int statusCode, Header[] content, byte[] arg2, Throwable error) {
 				prgDialog.hide();
-				bandera = false;
 				if (statusCode == 404) {
 					Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
 				} else if (statusCode == 500) {
@@ -294,7 +288,6 @@ public class MainActivity extends ActionBarActivity {
 				// TODO Auto-generated method stub
 				prgDialog.hide();
 				Toast.makeText(getApplicationContext(), "Error Occured to inform the MysQL DB", Toast.LENGTH_LONG).show();
-				bandera = false;
 			}
 
 			@Override
@@ -304,15 +297,14 @@ public class MainActivity extends ActionBarActivity {
 		});
 	}
 
-	/*
-	 * SQLite to MySql
-	 */
+	/***************************************************************************************************************************
+	 * SQLite to MySql																										   *
+	 ***************************************************************************************************************************/
 	public void syncMySQLDBSQLite(){
 		//Create AsycHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
 		RequestParams params = new RequestParams();
 		ArrayList<HashMap<String, String>> userList =  mydatabase.getAllData();
-		bandera1 = true;
 		if(userList.size()!=0){
 			if(mydatabase.dbSyncCount() != 0){
 				prgDialog.show();
@@ -323,7 +315,6 @@ public class MainActivity extends ActionBarActivity {
 					public void onFailure(int statusCode, Header[] arg1, byte[] arg2, Throwable arg3) {
 						// TODO Auto-generated method stub
 						prgDialog.hide();
-						bandera1 = false;
 						if(statusCode == 404){
 							Toast.makeText(getApplicationContext(), "Requested resource not found 2", Toast.LENGTH_LONG).show();
 						}else if(statusCode == 500){
@@ -365,7 +356,6 @@ public class MainActivity extends ActionBarActivity {
 				});
 			}
 		}
-
 	}
 }
 

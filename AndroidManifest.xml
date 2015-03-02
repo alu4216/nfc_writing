@@ -50,6 +50,10 @@
             android:name=".ActivityMenuRead"
             android:label="@string/title_activity_MenuRead" >
         </activity>
+         <activity
+            android:name=".ActivityShowDB"
+            android:label="title_activity_show_DB" >
+        </activity>
         <activity
             android:name=".ActivityReadUrl"
             android:label="@string/title_activity_ReadUrl" >

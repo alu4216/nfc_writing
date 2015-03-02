@@ -89,10 +89,10 @@ public class ActivityReadText extends CommonMethods {
 				if(bool == false)
 				{ 
 					queryValues.put("nombre",payload);
-					queryValues.put("tipo",null);
+					queryValues.put("tipo","vacio");
 					queryValues.put("sincro","0");
 					myDatabase.insert(queryValues);
-					txt.setText(myText+","+null);
+					txt.setText(myText+","+"vacio");
 				}
 				else
 				{

@@ -20,16 +20,6 @@
         android:width="250dp" />
 
     <Button
-        android:id="@+id/Quit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/WriteTag"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="47dp"
-        android:minWidth="250dp"
-        android:text="@string/Quit" />
-
-    <Button
         android:id="@+id/ReadTag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,9 +49,18 @@
         android:layout_alignLeft="@+id/WriteTag"
         android:layout_alignRight="@+id/WriteTag"
         android:layout_below="@+id/WriteTag"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="16dp"
         android:text="@string/create_identifier" 
         android:width="250dp" />
-        
+
+    <Button
+        android:id="@+id/Quit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/CreateIdentifier"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:minWidth="250dp"
+        android:text="@string/Quit" />
 
 </RelativeLayout>
