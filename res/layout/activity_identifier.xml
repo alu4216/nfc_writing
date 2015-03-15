@@ -2,44 +2,42 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
-       <TextView
-           android:id="@+id/FielText"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_alignParentTop="true"
-           android:layout_marginTop="23dp"
-           android:layout_toLeftOf="@string/action_settings"
-           android:ems="10"
-           android:paddingLeft="20dp"
-           android:text="@string/id_text"
-           android:textColor="@android:color/black"
-           android:textSize="18sp" />
 
-       <EditText
-           android:id="@+id/TxtNombre"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_alignRight="@+id/save"
-           android:layout_below="@+id/FielText"
-           android:layout_marginTop="29dp"
-           android:layout_marginLeft="29dp" 
-           android:ems="10"
-           android:inputType="textUri"
-           android:lineSpacingExtra="2dp"
-           android:paddingLeft="20dp"
-           android:textSize="13sp" >
+    <TextView
+        android:id="@+id/FielText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="23dp"
+        android:layout_toLeftOf="@string/action_settings"
+        android:ems="10"
+        android:paddingLeft="20dp"
+        android:text="@string/id_text"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
-       </EditText>
+    <EditText
+        android:id="@+id/TxtNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/save"
+        android:layout_below="@+id/FielText"
+        android:layout_marginTop="29dp"
+        android:ems="10"
+        android:inputType="textUri"
+        android:lineSpacingExtra="2dp"
+        android:layout_marginLeft="20dp"
+        android:textSize="18sp" >
+    </EditText>
 
-       <Button
-           android:id="@+id/save"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_alignParentRight="true"
-           android:layout_below="@+id/TxtNombre"
-           android:layout_marginRight="23dp"
-           android:layout_marginTop="26dp"
-           android:text="@string/save" />
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/TxtNombre"
+        android:layout_marginRight="23dp"
+        android:layout_marginTop="26dp"
+        android:text="@string/save" />
 
 </RelativeLayout>

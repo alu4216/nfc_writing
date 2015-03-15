@@ -2,8 +2,6 @@ package com.example.nfc_writing;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
-
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -25,6 +23,7 @@ public class ActivityReadText extends CommonMethods {
 	byte statusByte;
 	String payload; 
 	String tipo;
+	String relacion;
 	Boolean bool;
 	Database myDatabase; 
 	HashMap<String, String> queryValues;
@@ -36,14 +35,15 @@ public class ActivityReadText extends CommonMethods {
 		final Button quitButton = (Button)findViewById(R.id.Back);
 		SharedPreferences prefs = getSharedPreferences("MyPreferences",Context.MODE_PRIVATE);
 		bool = prefs.getBoolean("LMactive",false); 
-		tipo = prefs.getString("Lmultiple", "vacio");
+		tipo ="sinTipo";
+		relacion ="sinRelacion";
 		payload = null;
 		myText = new StringBuffer();
 		myDatabase = new Database(this, "DB", null, 1);
-		
 		int orientation = getResources().getConfiguration().orientation;
 
-		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()))
+	
+		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) // Read NFC card
 		{
 
 			NdefMessage[] message = getNdefMessages(getIntent());
@@ -82,45 +82,71 @@ public class ActivityReadText extends CommonMethods {
 				} 
 			} 
 
-			queryValues = new HashMap<String, String>();
-
-			if(orientation == 1)
+			if(orientation == 1) //Insertion in the database
 			{
-				if(bool == false)
-				{ 
-					queryValues.put("nombre",payload);
-					queryValues.put("tipo","vacio");
-					queryValues.put("sincro","0");
-					myDatabase.insert(queryValues);
-					txt.setText(myText+","+"vacio");
-				}
-				else
+				queryValues = new HashMap<String, String>();
+				if(bool == true)//If grouping is active
 				{
-					queryValues.put("nombre",payload);
-					queryValues.put("tipo",tipo);
-					queryValues.put("sincro","0");
-					myDatabase.insert(queryValues);
-					txt.setText(myText+","+tipo);
+					tipo = prefs.getString("Lmultiple", "vacio");
+					relacion = prefs.getString("Relacion","vacio");
+
+					if(prefs.getBoolean("OPactive", false)==true)//Inserting the parent object
+					{
+						SharedPreferences.Editor editor = prefs.edit();
+						editor.putBoolean("OPactive", false);
+						editor.putString("OPadre",payload);
+						editor.commit();
+						queryValues.put("objeto",payload);
+						myDatabase.insert(queryValues, "Objetos");
+						queryValues.put("relacion",relacion);
+						queryValues.put("interaccion",tipo);
+						myDatabase.insert(queryValues,"RCruzadas");
+						txt.setText("Relationship:"+ relacion+","+"Parent Object:"+prefs.getString("OPadre", "vacio")+","+"Type of Interaction:"+tipo+"\n");
+					}
+					else //Inserting the child object
+					{
+
+						Long tsLong = System.currentTimeMillis()/1000;
+						String timestamp = tsLong.toString();
+						queryValues.put("objeto",payload);
+						myDatabase.insert(queryValues,"Objetos");
+						queryValues.put("relacion",relacion);
+						queryValues.put("objetoPadre",prefs.getString("OPadre","SinPadre"));
+						queryValues.put("interaccion",tipo);
+						queryValues.put("tiempo",timestamp);
+						queryValues.put("sincro","0");
+						myDatabase.insert(queryValues,"Log");
+						txt.setText("Relationship:"+ relacion+","+"Parent Object:"+prefs.getString("OPadre", "vacio")+","+"Type of Interaction:"+tipo+"\n"
+								+"Child Object:"+payload+","+"Timer:"+timestamp+"\n");
+
+					}
 				}
-				
+				else //If grouping is not active
+				{
+					queryValues.put("objeto",payload);
+					myDatabase.insert(queryValues,"Objetos");
+					txt.setText("Object inserted:"+payload);
+				}
 			}
-			else
+			else //Search the database
 			{	
 				SQLiteDatabase db = myDatabase.getWritableDatabase();
-				StringBuffer prueba = new StringBuffer();
+				StringBuffer cadena = new StringBuffer();
 				String[] campos = new String[] {"*"};
 				String[] args = new String[] {payload};
-				Cursor c = db.query("WorkFlow", campos, "nombre=?", args, null, null, null);
+				Cursor c = db.query("Log", campos, "objetoPadre=?", args, null, null, null);
 				if (c.moveToFirst()) {
-					//Recorremos el cursor hasta que no haya más registros
 					do {
-						String nombre= c.getString(0);
-						String tipo = c.getString(1);
-						String sincro = c.getString(2);
-						prueba.append(nombre+","+tipo+","+sincro+"\n");
+						String relacion= c.getString(0);
+						String objetoPadre = c.getString(1);
+						String objeto = c.getString(2);
+						String interaccion = c.getString(3);
+						String tiempo = c.getString(4);
+						String sincro = c.getString(5);
+						cadena.append(relacion+","+objetoPadre+","+objeto+","+interaccion+","+tiempo+","+sincro+"\n");
 					} while(c.moveToNext());
 				}
-				txt.setText("Read TAG :"+payload+"\n"+"List:\n"+prueba);
+				txt.setText("Read TAG :"+payload+"\n"+"List:\n"+cadena);
 			}
 
 		}
@@ -130,6 +156,7 @@ public class ActivityReadText extends CommonMethods {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+
 				finish();
 			}
 		}); 

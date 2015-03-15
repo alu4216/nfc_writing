@@ -1,13 +1,14 @@
 package com.example.nfc_writing;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class ActivityMenuWrite extends Activity {
+public class ActivityMenuWrite extends ActionBarActivity {
 
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +19,7 @@ public class ActivityMenuWrite extends Activity {
 		final Button quitButton = (Button)findViewById(R.id.Back);
 		final Button writeText = (Button)findViewById(R.id.WriteText);
 		
-		writeUrl.setOnClickListener(new OnClickListener() {
+		writeUrl.setOnClickListener(new OnClickListener() { //Select write of URL or Plain TEXT
 
 			@Override
 			public void onClick(View v) {
@@ -50,4 +51,14 @@ public class ActivityMenuWrite extends Activity {
 			}
 		}); 
 	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getSupportActionBar().setIcon(R.drawable.ic_launcher);
+		getSupportActionBar().setTitle(" "+getTitle());
+		getSupportActionBar().setDisplayShowHomeEnabled(true);
+		getMenuInflater().inflate(R.menu.menu2, menu);
+		return true;
+	}
+	
 }

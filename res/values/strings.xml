@@ -14,10 +14,11 @@
     <string name="title_activity_MenuRead">Touch tag </string>
     <string name="title_activity_ReadUrl">Read URL </string>
     <string name="title_activity_ReadText">Read Plain Text </string>
-    <string name="title_activity_identifier">Create identifier</string>
-   <string name="title_activity_show_DB">Show DB</string>
+    <string name="title_activity_identifier">Create Type of Interaction</string>
+    <string name="title_activity_show_DB">Show DB</string>
+    <string name="title_activity_show_settings">Show Settings</string>
     <string name="Save">Save and Write</string>
-    <string name="save">Save</string> 
+    <string name="save">Save</string>
     <string name="Choose">Choose one option</string>
     <string name="Read">ReadTag</string>
     <string name="Write">WriteTag</string>
@@ -31,6 +32,6 @@
     <string name="create_identifier">Create Identifier</string>
     <string name="showDB">show DataBase</string>
     <string name="showDATABASE">Show DataBase:</string>
-    
- 
+    <string name="Settings">Settings</string>
+
 </resources>

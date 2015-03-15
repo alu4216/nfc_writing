@@ -2,7 +2,6 @@ package com.example.nfc_writing;
 
 import java.io.IOException;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -11,11 +10,24 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.Parcelable;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.Toast;
 
-public class CommonMethods extends Activity {
+public class CommonMethods extends ActionBarActivity {
 
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getSupportActionBar().setIcon(R.drawable.ic_launcher);
+		getSupportActionBar().setTitle(" "+getTitle());
+		getSupportActionBar().setDisplayShowHomeEnabled(true);
+		getMenuInflater().inflate(R.menu.menu2, menu);
+		return true;
+	}
+	
 	//Read to Tag
 	protected NdefMessage[] getNdefMessages(Intent intent)
 	{

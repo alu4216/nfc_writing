@@ -27,33 +27,82 @@ public class Database extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
 		String query;
-		query = "CREATE TABLE WorkFlow (nombre TEXT, tipo TEXT, sincro INT)";
+		query ="CREATE TABLE Objetos (nombre TEXT)";
+		db.execSQL(query);
+		query ="CREATE TABLE Interaccion (nombre TEXT)";
+		db.execSQL(query);
+		query ="CREATE TABLE Relacion (nombre TEXT)";
+		db.execSQL(query);
+		query ="CREATE TABLE RCruzadas (relacion TEXT, objeto TEXT,interaccion TEXT)";
+		db.execSQL(query);
+		query ="CREATE TABLE Log (relacion TEXT, objetoPadre TEXT,objeto TEXT,interaccion TEXT,tiempo TEXT,sincro INTEGER)";
 		db.execSQL(query);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
-		String query ="DROP TABLE IF EXISTS WorkFlow";
+		String query;
+		query ="DROP TABLE IF EXISTS Objetos";
+		db.execSQL(query);
+		query ="DROP TABLE IF EXISTS Interaccion";
+		db.execSQL(query);
+		query ="DROP TABLE IF EXISTS Relacion";
+		db.execSQL(query);
+		query ="DROP TABLE IF EXISTS RCruzadas";
+		db.execSQL(query);
+		query ="DROP TABLE IF EXISTS Log";
 		db.execSQL(query);
 		onCreate(db);
 	}
-	/**
-	 * Inserts User into SQLite DB
-	 * @param queryValues
+	/*
+	 * Inserts Data into SQLite DB
 	 */
-	public void insert(HashMap<String, String> queryValues) {
+	public void insert(HashMap<String, String> queryValues,String table) {
 		SQLiteDatabase database = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put("nombre", queryValues.get("nombre"));
-		values.put("tipo", queryValues.get("tipo"));
-		values.put("sincro", queryValues.get("sincro"));
-		database.insert("WorkFlow", null, values);
-		database.close();
+		
+		switch (table) {
+		case "Objetos":
+			values.put("nombre",queryValues.get("objeto"));
+			database.insert("Objetos", null, values);
+			database.close();
+			break;
+		case "Interaccion":
+			values.put("nombre",queryValues.get("interaccion"));
+			database.insert("Interaccion", null, values);
+			database.close();
+			break;
+		case "Relacion":
+			values.put("nombre",queryValues.get("relacion"));
+			database.insert("Relacion", null, values);
+			database.close();
+			break;
+		case "RCruzadas":
+			values.put("relacion", queryValues.get("relacion"));
+			values.put("objeto", queryValues.get("objeto"));
+			values.put("interaccion", queryValues.get("interaccion"));
+			database.insert("RCruzadas", null, values);
+			database.close();
+			break;
+		case "Log":
+			values.put("relacion", queryValues.get("relacion"));
+			values.put("objetoPadre", queryValues.get("objetoPadre"));
+			values.put("objeto", queryValues.get("objeto"));
+			values.put("interaccion", queryValues.get("interaccion"));
+			values.put("tiempo", queryValues.get("tiempo"));
+			values.put("sincro", queryValues.get("sincro"));
+			database.insert("Log", null, values);	
+			database.close();
+			break;
+
+		default:
+			database.close();
+			break;
+		}
 	}
-	/**
+	/*
 	 * Get list of data from SQLite DB as Array List
-	 * @return
 	 */
 	public ArrayList<HashMap<String, String>> getAllData() {
 		ArrayList<HashMap<String, String>> usersList;
@@ -73,9 +122,8 @@ public class Database extends SQLiteOpenHelper {
 		database.close();
 		return usersList;
 	}
-	/**
+	/*
 	 * Compose JSON out of SQLite records
-	 * @return
 	 */
 	public String composeJSONfromSQLite(){
 		ArrayList<HashMap<String, String>> wordList;
@@ -110,14 +158,12 @@ public class Database extends SQLiteOpenHelper {
 		return count;
 	}
 
-	/**
+	/*
 	 * Update Sync status against 
-	 * @param nombre
-	 * @param tipo
 	 */
 	public void updateSyncStatus(String nombre, String tipo){
 		SQLiteDatabase database = this.getWritableDatabase();    
-		
+
 		String query = new String("Update WorkFlow set sincro = '1' where nombre="+"'"+nombre+"'");//"+nombre);//+ "&& tipo="+tipo);
 		//String updateQuery = "Update users set sincro = '"+ status +"' where userId="+"'"+ id +"'";
 		Log.d("query",query);        

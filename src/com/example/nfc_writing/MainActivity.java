@@ -122,6 +122,8 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				finish();
+				moveTaskToBack(true);
+				System.exit(0);
 			}
 		});	
 		
@@ -130,6 +132,9 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
+		getSupportActionBar().setIcon(R.drawable.ic_launcher);
+		getSupportActionBar().setTitle(" "+getTitle());
+		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
@@ -154,6 +159,8 @@ public class MainActivity extends ActionBarActivity {
 			
 			return true;
 		case R.id.action_settings:
+			 Intent intent = new Intent(MainActivity.this,ActivityShowSetting.class);
+			 startActivity(intent);
 			return true;
 		case R.id.reciver:
 			if(reciver == false)
@@ -255,7 +262,7 @@ public class MainActivity extends ActionBarActivity {
 					// Add sync status from Object
 					queryValues.put("sincro", obj.get("sincro").toString());
 					// Insert User into SQLite DB
-					mydatabase.insert(queryValues);
+					mydatabase.insert(queryValues," ");
 					HashMap<String, String> map = new HashMap<String, String>();
 
 					// Add status for each User in Hashmap

@@ -63,23 +63,6 @@ public class ActivityWriteUrl extends CommonMethods {
 		mTechLists = new String[][] { new String[] { Ndef.class.getName() }, new String[] { NdefFormatable.class.getName() }};
 	}
 
-	/*private void setupNdef()
-	{
-		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()));
-		{
-			Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG); 
-			byte[] uriField = urlAddress.getBytes(Charset.forName("US-ASCII"));
-			byte[] payload = new byte[uriField.length + 1]; 
-			payload[0] = 0x01; System.arraycopy(uriField, 0, payload, 1, uriField.length); 
-			NdefRecord URIRecord = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_URI, new byte[0], payload);
-			NdefMessage newMessage= new NdefMessage(new NdefRecord[] { URIRecord }); 
-
-			//WRITE DATA TO TAG
-			writeNdefMessageToTag(newMessage, tag);
-		}
-
-	}*/
-
 	@Override
 	public void onPause()
 	{
@@ -88,7 +71,7 @@ public class ActivityWriteUrl extends CommonMethods {
 			mNfcAdapter.disableForegroundDispatch(this);
 	}
 	@Override
-	public void onResume()//Dar prioridad a la activity en primer plano al descubrir una etiqueta
+	public void onResume()
 	{
 		super.onResume();
 

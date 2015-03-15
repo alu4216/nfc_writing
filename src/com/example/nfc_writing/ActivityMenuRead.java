@@ -1,17 +1,18 @@
 package com.example.nfc_writing;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class ActivityMenuRead extends Activity {
+public class ActivityMenuRead extends ActionBarActivity {
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,7 +31,7 @@ public class ActivityMenuRead extends Activity {
 	}
 	
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	public boolean onKeyDown(int keyCode, KeyEvent event) { //Select grouping mode through volume button
 
 		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		switch(keyCode){
@@ -45,20 +46,30 @@ public class ActivityMenuRead extends Activity {
 			{
 				editor.putBoolean("LMactive", false);
 				editor.commit();
-				Toast.makeText(this,"Disible multimode reading with:"+txt, Toast.LENGTH_SHORT).show();
+				Toast.makeText(this,"Disable group reading with:"+txt, Toast.LENGTH_SHORT).show();
 				v.vibrate(500);
 			}
 			else
 			{
 				editor.putBoolean("LMactive", true);
 				editor.commit();
-				Toast.makeText(this,"Active multimode reading with:"+txt, Toast.LENGTH_SHORT).show();
+				Toast.makeText(this,"Activated group reading with:"+txt, Toast.LENGTH_SHORT).show();
 				v.vibrate(500);
 			}
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getSupportActionBar().setIcon(R.drawable.ic_launcher);
+		getSupportActionBar().setTitle(" "+getTitle());
+		getSupportActionBar().setDisplayShowHomeEnabled(true);
+		getMenuInflater().inflate(R.menu.menu2, menu);
+		return true;
+	}
+	
 
 }
 

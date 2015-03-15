@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class ActivityWriteText extends CommonMethods {
+public class ActivityWriteText extends CommonMethods { //CommonMethods is a class where are common methods of writing 
 
 	private String data;	
 	private NfcAdapter mNfcAdapter;
@@ -57,7 +57,7 @@ public class ActivityWriteText extends CommonMethods {
 		}); 
 
 	}
-	private void setupForenground() 
+	private void setupForenground() //Set up forengroud
 	{
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -74,7 +74,7 @@ public class ActivityWriteText extends CommonMethods {
 			mNfcAdapter.disableForegroundDispatch(this);
 	}
 	@Override
-	public void onResume()//Dar prioridad a la activity en primer plano al descubrir una etiqueta
+	public void onResume()//prioritize activity in the foreground
 	{
 		super.onResume();
 		if(mNfcAdapter != null)
@@ -95,7 +95,7 @@ public class ActivityWriteText extends CommonMethods {
 		System.arraycopy(langBytes, 0, data, 1, langBytes.length); System.arraycopy(textBytes, 0, data, 1 + langBytes.length, textBytes.length);
 		NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], data);
 		NdefMessage newMessage= new NdefMessage(new NdefRecord[] { textRecord });
-		writeNdefMessageToTag(newMessage, tag);
+		writeNdefMessageToTag(newMessage, tag);//Write in NFC tag
 
 	}
 }

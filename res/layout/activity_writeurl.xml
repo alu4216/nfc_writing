@@ -24,11 +24,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/FielText"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
         android:ems="10"
-        android:paddingLeft="20dp"
         android:inputType="textUri"
         android:lineSpacingExtra="2dp"
+        android:paddingLeft="20dp"
         android:textSize="13sp" />
 
     <TextView
@@ -37,6 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/Save"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="18dp"
         android:ems="10"
         android:paddingLeft="20dp"
@@ -52,7 +56,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="15dp"
         android:text="@string/Save" />
-    
+
     <Button
         android:id="@+id/Back"
         android:layout_width="wrap_content"

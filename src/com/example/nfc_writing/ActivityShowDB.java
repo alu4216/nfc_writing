@@ -1,19 +1,20 @@
 package com.example.nfc_writing;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ActivityShowDB extends Activity {
+public class ActivityShowDB extends ActionBarActivity {
 
 	Database mydatabase;
 
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) { //Show database
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_showdatabase);
 
@@ -45,4 +46,14 @@ public class ActivityShowDB extends Activity {
 			}
 		});	
 	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getSupportActionBar().setIcon(R.drawable.ic_launcher);
+		getSupportActionBar().setTitle(" "+getTitle());
+		getSupportActionBar().setDisplayShowHomeEnabled(true);
+		getMenuInflater().inflate(R.menu.menu2, menu);
+		return true;
+	}
+	
 }

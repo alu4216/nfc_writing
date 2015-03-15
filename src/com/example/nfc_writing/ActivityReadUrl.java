@@ -26,7 +26,7 @@ public class ActivityReadUrl extends CommonMethods {
 		final Button urlButton = (Button)findViewById(R.id.Open);
 		final Button quitButton = (Button)findViewById(R.id.Back);
 
-		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()))
+		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) //Read NFC card
 		{
 
 			NdefMessage[] message = getNdefMessages(getIntent());
@@ -39,13 +39,13 @@ public class ActivityReadUrl extends CommonMethods {
 					payloadHeader = record.getPayload()[0];
 				}
 			}
-			txt.setText("URL is recived:" + payload);
+			txt.setText("URL is recived:" + payload); //Show url
 			urlButton.setOnClickListener(new android.view.View.OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					if(payloadHeader == 0x01)
+					if(payloadHeader == 0x01) //Open URL
 					{
 						Intent data = new Intent();
 						data.setAction(Intent.ACTION_VIEW);
