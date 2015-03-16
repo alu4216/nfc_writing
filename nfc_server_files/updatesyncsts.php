@@ -16,18 +16,16 @@ $b=array();
 //Loop through an Array and insert data read from JSON into MySQL DB
 for($i=0; $i<count($data) ; $i++)
 {
-//Store User into MySQL DB
-$res = $db->updateSyncSts($data[$i]->nombre,$data[$i]->status);
-	//Based on inserttion, create JSON response
-	if($res){
-		$b["nombre"] = $data[$i]->nombre;
-		$b["status"] = 'yes';
-		array_push($a,$b);
-	}else{
-		$b["nombre"] = $data[$i]->nombre;
-		$b["status"] = 'no';
-		array_push($a,$b);
-	}
+    //Store User into MySQL DB
+    $res = $db->updateSyncSts($data[$i]->relacion,$data[$i]->objetoPadre,$data[$i]->objeto,$data[$i]->interaccion,$data[$i]->tiempo,$data[$i]->sincro);
+    //Based on inserttion, create JSON response
+    if($res){
+        $b["sincro"] =$data[$i]->sincro;
+        array_push($a,$b);
+    }else{
+        $b["sincro"] ='no';
+        array_push($a,$b);
+    }
 }
 //Post JSON response back to Android Application
 echo json_encode($a);

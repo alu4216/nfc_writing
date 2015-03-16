@@ -124,9 +124,10 @@ public class MainActivity extends ActionBarActivity {
 				finish();
 				moveTaskToBack(true);
 				System.exit(0);
+				
 			}
 		});	
-		
+
 	}
 
 	@Override
@@ -149,18 +150,18 @@ public class MainActivity extends ActionBarActivity {
 			prgDialog.show();
 			Handler handler = new Handler();
 			handler.postDelayed(new Runnable() {
-			    public void run() {
-			        prgDialog.hide();
-			        Intent intent = new Intent(MainActivity.this,ActivityShowDB.class);
+				public void run() {
+					prgDialog.hide();
+					Intent intent = new Intent(MainActivity.this,ActivityShowDB.class);
 					startActivity(intent);
-			    }}, 3000); 
+				}}, 3000); 
 			syncMySQLDBSQLite(); //Sincronización web.móvil envía datos a la web. 
 			syncSQLiteMySQLDB(); //Sincronización móvil.Web envía datos al movil.
-			
+
 			return true;
 		case R.id.action_settings:
-			 Intent intent = new Intent(MainActivity.this,ActivityShowSetting.class);
-			 startActivity(intent);
+			Intent intent = new Intent(MainActivity.this,ActivityShowSetting.class);
+			startActivity(intent);
 			return true;
 		case R.id.reciver:
 			if(reciver == false)
@@ -197,13 +198,12 @@ public class MainActivity extends ActionBarActivity {
 	/****************************************************************************************************************************************************
 	 * MySql to SQlite																																	*
 	 ***************************************************************************************************************************************************/
-	public void syncSQLiteMySQLDB() {
-		// Create AsycHttpClient object
+	//Get data
+	public void syncSQLiteMySQLDB() { 
+		
 		AsyncHttpClient client = new AsyncHttpClient();
-		// Http Request Params Object
 		RequestParams params = new RequestParams();
-		// Make Http call to getusers.php
-
+	
 		client.post("http://192.168.0.10:80/nfc/getusers.php", params, new AsyncHttpResponseHandler() {
 			@Override
 			public void onFailure(int statusCode, Header[] content, byte[] arg2, Throwable error) {
@@ -223,7 +223,6 @@ public class MainActivity extends ActionBarActivity {
 
 				try {
 					String cadena = new String(arg2,"UTF-8");
-					// Update SQLite DB with response sent by getusers.php
 					updateSQLite(cadena);
 
 				} catch (UnsupportedEncodingException e) {
@@ -235,45 +234,43 @@ public class MainActivity extends ActionBarActivity {
 			}
 		});
 	}
-	public void updateSQLite(String response){
+	//Update Database
+	public void updateSQLite(String response){		
 		ArrayList<HashMap<String, String>> usersynclist;
 		usersynclist = new ArrayList<HashMap<String, String>>();
 		// Create GSON object
 		Gson gson = new GsonBuilder().create();
 		try {
-			// Extract JSON array from the response
+
 			JSONArray arr = new JSONArray(response);
 			System.out.println(arr.length());
-			// If no of array elements is not zero
 			if(arr.length() != 0){
-				// Loop through each array element, get JSON object which has nombre and tipo
 				for (int i = 0; i < arr.length(); i++) {
 					// Get JSON object
 					JSONObject obj = (JSONObject) arr.get(i);
-					System.out.println(obj.get("nombre"));
-					System.out.println(obj.get("tipo"));
+					System.out.println(obj.get("relacion"));
+					System.out.println(obj.get("objetoPadre"));
+					System.out.println(obj.get("objeto"));
+					System.out.println(obj.get("interaccion"));
+					System.out.println(obj.get("tiempo"));
 					System.out.println(obj.get("sincro"));
+					
 					// DB QueryValues Object to insert into SQLite
 					queryValues = new HashMap<String, String>();
-					// Add name extracted from Object
-					queryValues.put("nombre", obj.get("nombre").toString());
-					// Add type extracted from Object
-					queryValues.put("tipo", obj.get("tipo").toString());
-					// Add sync status from Object
+					queryValues.put("relacion", obj.get("relacion").toString());
+					queryValues.put("objetoPadre", obj.get("objetoPadre").toString());
+					queryValues.put("objeto", obj.get("objeto").toString());
+					queryValues.put("interaccion", obj.get("interaccion").toString());
+					queryValues.put("tiempo", obj.get("tiempo").toString());
 					queryValues.put("sincro", obj.get("sincro").toString());
 					// Insert User into SQLite DB
-					mydatabase.insert(queryValues," ");
-					HashMap<String, String> map = new HashMap<String, String>();
+					mydatabase.insert(queryValues,"Log");
 
 					// Add status for each User in Hashmap
-					map.put("nombre", obj.get("nombre").toString());
-					map.put("status", "1");
-					usersynclist.add(map);
+					usersynclist.add(queryValues);
 				}
 				// Inform Remote MySQL DB about the completion of Sync activity by passing Sync status of Users
 				updateMySQLSyncSts(gson.toJson(usersynclist));
-				// Reload the Main Activity
-				//reloadActivity();
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -286,7 +283,7 @@ public class MainActivity extends ActionBarActivity {
 		AsyncHttpClient client = new AsyncHttpClient();
 		RequestParams params = new RequestParams();
 		params.put("sincro", json);
-		// Make Http call to updatesyncsts.php with JSON parameter which has Sync statuses of Users
+		
 		client.post("http://192.168.0.10:80/nfc/updatesyncsts.php", params, new AsyncHttpResponseHandler() {
 
 			@Override
@@ -299,7 +296,17 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
-				// TODO Auto-generated method stub
+				// TODO Auto-generated method stub		
+				String cadena;
+				try {
+					cadena = new String(arg2,"UTF-8");
+					System.out.println(cadena);
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			
 			}
 		});
 	}
@@ -308,7 +315,7 @@ public class MainActivity extends ActionBarActivity {
 	 * SQLite to MySql																										   *
 	 ***************************************************************************************************************************/
 	public void syncMySQLDBSQLite(){
-		//Create AsycHttpClient object
+
 		AsyncHttpClient client = new AsyncHttpClient();
 		RequestParams params = new RequestParams();
 		ArrayList<HashMap<String, String>> userList =  mydatabase.getAllData();
@@ -344,9 +351,14 @@ public class MainActivity extends ActionBarActivity {
 								System.out.println(arr.length());
 								for(int i=0; i<arr.length();i++){
 									JSONObject obj = (JSONObject)arr.get(i);
-									System.out.println(obj.get("nombre"));
-									System.out.println(obj.get("tipo"));
-									mydatabase.updateSyncStatus(obj.get("nombre").toString(),obj.get("tipo").toString());
+									System.out.println(obj.get("relacion"));
+									System.out.println(obj.get("objetoPadre"));
+									System.out.println(obj.get("objeto"));
+									System.out.println(obj.get("interaccion"));
+									System.out.println(obj.get("tiempo"));
+									System.out.println(obj.get("sincro"));
+									mydatabase.updateSyncStatus(obj.get("relacion").toString(),obj.get("objetoPadre").toString(),obj.get("objeto").toString(),
+											obj.get("interaccion").toString(),obj.get("tiempo").toString());
 								}
 							} catch (JSONException e) {
 								// TODO Auto-generated catch block

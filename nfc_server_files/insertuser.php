@@ -16,7 +16,7 @@
         margin-right: auto;
     }
     form{
-        width: 30%;
+        width: 60%;
         margin-left: auto;
         margin-right: auto;
         padding: 10px;
@@ -38,21 +38,28 @@
 <form method="POST">
     <table>
         <tr>
-            <td>Name:</td><td><input name="username" /></td>
-            <td>Type:</td><td><input name="type" /></td>    
+            <td>Relationships</td><td><input name="relacion" /></td>
+            <td>ParentObject:</td><td><input name="objetoPadre" /></td>  
+            <td>ChildObject:</td><td><input name="objeto" /></td> 
+            <td>Interaction:</td><td><input name="interaccion" /></td>  
         </tr>
-        <tr><td colspan="2" align="center"><input type="submit" value="Add User"/></td></tr>
+        
     </table>
 </form>
 <?php
 include_once './db_functions.php';
 //Create Object for DB_Functions clas
-if(isset($_POST["username"]) && !empty($_POST["username"])&& isset($_POST["type"]) && !empty($_POST["type"])){
+if(isset($_POST["relacion"]) && !empty($_POST["relacion"])&& isset($_POST["objetoPadre"]) && !empty($_POST["objetoPadre"])
+                && isset($_POST["objeto"]) && !empty($_POST["objeto"])&& isset($_POST["interaccion"]) && !empty($_POST["interaccion"])){
     $db = new DB_Functions(); 
     //Store User into MySQL DB
-    $nombre = $_POST["username"];
-    $tipo = $_POST["type"];
-    $res = $db->storeUser($nombre,$tipo);
+    $relacion = $_POST["relacion"];
+    $objetoPadre = $_POST["objetoPadre"];
+    $objeto = $_POST["objeto"];
+    $interaccion = $_POST["interaccion"];
+    $tiempo = "1111";
+    $sincro ="0";
+    $res = $db->storeUser($relacion,$objetoPadre,$objeto,$interaccion,$tiempo,$sincro);
     //Based on inserttion, create JSON response
     if($res){ ?>
 <div id="msg">Insertion successful</div>
@@ -60,6 +67,7 @@ if(isset($_POST["username"]) && !empty($_POST["username"])&& isset($_POST["type"
 <div id="msg">Insertion failed</div>
 <?php }
 } else{ ?>
-<div id="msg">Please enter name and submit</div>
+<div id="msg">Please enter data and submit</div>
+<div id="msg"><tr><td colspan="2" align="center"><input type="submit" value="Add Data"/></td></tr></div>
 <?php }
 ?>

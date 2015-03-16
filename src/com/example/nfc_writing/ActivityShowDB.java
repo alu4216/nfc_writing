@@ -25,17 +25,20 @@ public class ActivityShowDB extends ActionBarActivity {
 
 		StringBuffer prueba = new StringBuffer();
 		String[] campos = new String[] {"*"};
-		Cursor c = db.query("WorkFlow", campos, null, null, null, null, null);
+		Cursor c = db.query("Log", campos, null, null, null, null, null);
 		if (c.moveToFirst()) {
 			//Recorremos el cursor hasta que no haya más registros
 			do {
-				String nombre= c.getString(0);
-				String tipo = c.getString(1);
-				String sincro = c.getString(2);
-				prueba.append(nombre+","+tipo+","+sincro+"\n");
+				String relacion= c.getString(0);
+				String objetoPadre = c.getString(1);
+				String objeto = c.getString(2);
+				String interaccion = c.getString(3);
+				String tiempo = c.getString(4);
+				String sincro = c.getString(5);
+				prueba.append(relacion+","+objetoPadre+","+objeto+","+interaccion+","+tiempo+","+sincro+"\n");
 			} while(c.moveToNext());
 		}
-		txt.setText("Name - Type - Sync\n"+prueba.toString());
+		txt.setText("Relacion - Type - Sync\n"+prueba.toString());
 
 		quitButton.setOnClickListener(new OnClickListener() {
 

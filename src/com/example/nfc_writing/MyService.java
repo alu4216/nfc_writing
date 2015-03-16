@@ -14,25 +14,25 @@ public class MyService extends Service {
 	
 	@Override
 	public void onCreate() {
-		//Toast.makeText(this, "Service was Created", Toast.LENGTH_LONG).show();
+
 
 	}
 	@Override
 	public IBinder onBind(Intent intent) {
 		throw new UnsupportedOperationException("Not yet implemented");
-		//	return null;
+
 	}
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		//Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
+
 		Intent resultIntent = new Intent(this, MainActivity.class);
 		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0,
 				resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		NotificationCompat.Builder mNotifyBuilder;
 		NotificationManager mNotificationManager;
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		// Sets an ID for the notification, so it can be updated
+
 		int notifyID = 9001;
 		mNotifyBuilder = new NotificationCompat.Builder(this)
 		.setContentTitle("Alert")
@@ -54,6 +54,7 @@ public class MyService extends Service {
 		// Post a notification
 		mNotificationManager.notify(notifyID, mNotifyBuilder.build());
 	}
+	
 
 
 }

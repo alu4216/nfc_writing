@@ -22,12 +22,15 @@ if($json!='')
     for($i=0; $i<count($data) ; $i++)
     {
         //Store User into MySQL DB
-        $res = $db->storeUser($data[$i]->nombre,$data[$i]->tipo,$data[$i]->sincro);        
+        $res = $db->storeUser($data[$i]->relacion,$data[$i]->objetoPadre,$data[$i]->objeto,$data[$i]->interaccion,$data[$i]->tiempo,$data[$i]->sincro);        
         //Based on inserttion, create JSON response
         if($res){
-            $b["nombre"] = $data[$i]->nombre;
-            $b["tipo"] = $data[$i]->tipo;
-            $b["sincro"] = $data[$i]->sincro;
+            $b["relacion"] = $data[$i]->relacion;
+            $b["objetoPadre"] = $data[$i]->objetoPadre;
+            $b["objeto"] = $data[$i]->objeto;
+            $b["interaccion"] = $data[$i]->interaccion;
+            $b["tiempo"] = $data[$i]->tiempo;
+            $b["sincro"] = "1";
             array_push($a,$b);
         }
     }

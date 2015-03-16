@@ -107,15 +107,18 @@ public class Database extends SQLiteOpenHelper {
 	public ArrayList<HashMap<String, String>> getAllData() {
 		ArrayList<HashMap<String, String>> usersList;
 		usersList = new ArrayList<HashMap<String, String>>();
-		String selectQuery = "SELECT  * FROM WorkFlow";
+		String selectQuery = "SELECT  * FROM Log";
 		SQLiteDatabase database = this.getWritableDatabase();
 		Cursor cursor = database.rawQuery(selectQuery, null);
 		if (cursor.moveToFirst()) {
 			do {
 				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("nombre", cursor.getString(0));
-				map.put("tipo", cursor.getString(1));
-				map.put("sincro", cursor.getString(2));
+				map.put("relacion", cursor.getString(0));
+				map.put("objetoPadre", cursor.getString(1));
+				map.put("objeto", cursor.getString(2));
+				map.put("interaccion", cursor.getString(3));
+				map.put("tiempo", cursor.getString(4));
+				map.put("sincro", cursor.getString(5));
 				usersList.add(map);
 			} while (cursor.moveToNext());
 		}
@@ -128,19 +131,19 @@ public class Database extends SQLiteOpenHelper {
 	public String composeJSONfromSQLite(){
 		ArrayList<HashMap<String, String>> wordList;
 		wordList = new ArrayList<HashMap<String, String>>();
-		String selectQuery = "SELECT  * FROM WorkFlow where sincro ='0'";
+		String selectQuery = "SELECT  * FROM Log where sincro ='0'";
 		SQLiteDatabase database = this.getWritableDatabase();
 		Cursor cursor = database.rawQuery(selectQuery, null);
 		if (cursor.moveToFirst()) {
 			do {
 				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("nombre", cursor.getString(0));
-				map.put("tipo", cursor.getString(1));
+				map.put("relacion", cursor.getString(0));
+				map.put("objetoPadre", cursor.getString(1));
+				map.put("objeto", cursor.getString(2));
+				map.put("interaccion", cursor.getString(3));
+				map.put("tiempo", cursor.getString(4));
 				map.put("sincro", "1");
 				wordList.add(map);
-				System.out.println("nombre: "+map.get("nombre"));
-				System.out.println("tipo: "+map.get("tipo"));
-				System.out.println("sincro: "+map.get("sincro"));
 			} while (cursor.moveToNext());
 		}
 		database.close();
@@ -150,7 +153,7 @@ public class Database extends SQLiteOpenHelper {
 	}
 	public int dbSyncCount(){
 		int count = 0;
-		String selectQuery = "SELECT * FROM WorkFlow where sincro ='0' ";
+		String selectQuery = "SELECT * FROM Log where sincro ='0' ";
 		SQLiteDatabase database = this.getWritableDatabase();
 		Cursor cursor = database.rawQuery(selectQuery, null);
 		count = cursor.getCount();
@@ -161,10 +164,11 @@ public class Database extends SQLiteOpenHelper {
 	/*
 	 * Update Sync status against 
 	 */
-	public void updateSyncStatus(String nombre, String tipo){
+	public void updateSyncStatus(String relacion, String objetoPadre, String objeto, String interaccion, String tiempo){
 		SQLiteDatabase database = this.getWritableDatabase();    
 
-		String query = new String("Update WorkFlow set sincro = '1' where nombre="+"'"+nombre+"'");//"+nombre);//+ "&& tipo="+tipo);
+		String query = new String("Update Log set sincro = '1' where relacion='"+relacion+"'AND objetoPadre='"+objetoPadre+"'" +
+								  "AND objeto='"+objeto+"'AND interaccion='"+interaccion+"'AND tiempo='"+tiempo+"'");
 		//String updateQuery = "Update users set sincro = '"+ status +"' where userId="+"'"+ id +"'";
 		Log.d("query",query);        
 		database.execSQL(query);

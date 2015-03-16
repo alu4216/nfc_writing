@@ -22,9 +22,9 @@ class DB_Functions {
      * Storing new user
      * returns user details
      */
-    public function storeUser($nombre,$tipo) {
+    public function storeUser($relacion,$objetoPadre,$objeto,$interaccion,$tiempo,$sincro) {
         // Insert user into database
-        $result = mysql_query("INSERT INTO workflow(nombre,tipo) VALUES('$nombre','$tipo')");
+        $result = mysql_query("INSERT INTO log(relacion,objetoPadre,objeto,interaccion,tiempo,sincro) VALUES('$relacion','$objetoPadre','$objeto','$interaccion','$tiempo','$sincro')");
 
         if ($result) {
             return true;
@@ -37,19 +37,21 @@ class DB_Functions {
      * Getting all users
      */
     public function getAllUsers() {
-        $result = mysql_query("select * FROM workflow");
+        $result = mysql_query("select * FROM log");
         return $result;
     }
     /**
      * Get Yet to Sync row Count
      */
     public function getUnSyncRowCount() {
-        $result = mysql_query("SELECT * FROM workflow WHERE sincro = FALSE");
+        $result = mysql_query("SELECT * FROM log WHERE sincro = FALSE");
         return $result;
     }
 
-    public function updateSyncSts($nombre, $sts){
-        $result = mysql_query("UPDATE workflow SET sincro = $sts WHERE nombre = '$nombre'");
+    public function updateSyncSts($relacion,$objetoPadre,$objeto,$interaccion,$tiempo,$sincro){
+       
+        $result = mysql_query("UPDATE log SET sincro = '$sincro'  WHERE relacion = '$relacion'AND objetoPadre= '$objetoPadre'AND objeto='$objeto'AND interaccion='$interaccion'
+                              AND tiempo='$tiempo'");
         return $result;
     }
 }

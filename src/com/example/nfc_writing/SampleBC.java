@@ -12,17 +12,15 @@ import com.loopj.android.http.RequestParams;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.Toast;
 
 public class SampleBC extends BroadcastReceiver {
-	static int noOfTimes = 0;
+
 
 	@Override
 	public void onReceive(final Context context, Intent intent) {
 		// TODO Auto-generated method stub
-		Log.e("MY TAG", "ENTRO A onRECIVE");
-		noOfTimes++;
+		
 		//Toast.makeText(context, "BC Service Running for " + noOfTimes + " times", Toast.LENGTH_SHORT).show();
 		AsyncHttpClient client = new AsyncHttpClient();
 		RequestParams params = new RequestParams();
@@ -49,10 +47,8 @@ public class SampleBC extends BroadcastReceiver {
 				System.out.println(response);
 				try {
 					String cadena = new String(arg2,"UTF-8");
-					// Create JSON object out of the response sent by getdbrowcount.php
 					JSONObject obj = new JSONObject(cadena);
 					System.out.println(obj.get("count"));
-					// If the count value is not zero, call MyService to display notification 
 					if(obj.getInt("count") != 0){
 						final Intent intnt = new Intent(context, MyService.class);
 						// Set unsynced count in intent data

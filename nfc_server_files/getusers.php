@@ -7,10 +7,13 @@
     if ($users != false){
         $no_of_users = mysql_num_rows($users);
 		while ($row = mysql_fetch_array($users)) {		
-			$b["nombre"] = $row["nombre"];
-			$b["tipo"] = $row["tipo"];
+			$b["relacion"] = $row["relacion"];
+			$b["objetoPadre"] = $row["objetoPadre"];
+            $b["objeto"] = $row["objeto"];
+			$b["interaccion"] = $row["interaccion"];
+			$b["tiempo"] = $row["tiempo"];
             $b["sincro"] = "1";
-			array_push($a,$b);
+            array_push($a,$b);
 		}
 		echo json_encode($a);
 	}

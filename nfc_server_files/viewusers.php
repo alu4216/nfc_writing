@@ -77,13 +77,16 @@ else
 if ($no_of_users > 0) {
         ?>
         <table>
-            <tr id="header"><td>Username</td><td>Type</td><td>Sync Status</td></tr>
+            <tr id="header"><td>Relationship</td><td>ParentObject</td><td>ChildObject</td><td>Interaction</td><td>Time</td><td>Sync</td></tr>
             <?php
     while ($row = mysql_fetch_array($users)) {
             ?> 
             <tr>
-                <td><span><?php echo $row["nombre"] ?></span></td>
-                <td><span><?php echo $row["tipo"] ?></span></td>
+                <td><span><?php echo $row["relacion"] ?></span></td>
+                <td><span><?php echo $row["objetoPadre"] ?></span></td>
+                <td><span><?php echo $row["objeto"] ?></span></td>
+                <td><span><?php echo $row["interaccion"] ?></span></td>
+                <td><span><?php echo $row["tiempo"] ?></span></td>
                 <td id="sync"><span>
                     <?php 
                 if($row["sincro"])
