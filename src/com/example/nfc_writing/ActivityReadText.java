@@ -1,5 +1,6 @@
 package com.example.nfc_writing;
 
+
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import android.content.Context;
@@ -7,14 +8,17 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.util.Log;
+import android.view.Gravity;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.TableRow.LayoutParams;
 
 public class ActivityReadText extends CommonMethods {
 
@@ -27,13 +31,27 @@ public class ActivityReadText extends CommonMethods {
 	Boolean bool;
 	Database myDatabase; 
 	HashMap<String, String> queryValues;
+	TextView txt; 
+	TableLayout table_layout;
+	TextView relation;
+	TextView pObject;
+	TextView object;
+	TextView timestamp;
+	TextView sync;
+	SharedPreferences prefs ;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_readtext);
-		final TextView txt = (TextView)findViewById(R.id.txt);
-		final Button quitButton = (Button)findViewById(R.id.Back);
-		SharedPreferences prefs = getSharedPreferences("MyPreferences",Context.MODE_PRIVATE);
+		setContentView(R.layout.prueba);
+		txt = (TextView)findViewById(R.id.textView);
+		relation = (TextView)findViewById(R.id.Relation);
+		pObject = (TextView)findViewById(R.id.P_object);
+		object = (TextView)findViewById(R.id.Object);
+		timestamp = (TextView)findViewById(R.id.Timestamp);
+		sync = (TextView)findViewById(R.id.Sync);
+		table_layout = (TableLayout) findViewById(R.id.tableLayout1);
+
+		prefs = getSharedPreferences("MyPreferences",Context.MODE_PRIVATE);
 		bool = prefs.getBoolean("LMactive",false); 
 		tipo ="sinTipo";
 		relacion ="sinRelacion";
@@ -42,7 +60,7 @@ public class ActivityReadText extends CommonMethods {
 		myDatabase = new Database(this, "DB", null, 1);
 		int orientation = getResources().getConfiguration().orientation;
 
-	
+
 		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) // Read NFC card
 		{
 
@@ -101,7 +119,10 @@ public class ActivityReadText extends CommonMethods {
 						queryValues.put("relacion",relacion);
 						queryValues.put("interaccion",tipo);
 						myDatabase.insert(queryValues,"RCruzadas");
-						txt.setText("Relationship:"+ relacion+","+"Parent Object:"+prefs.getString("OPadre", "vacio")+","+"Type of Interaction:"+tipo+"\n");
+
+						showtable(0, payload, null, null,null);
+
+
 					}
 					else //Inserting the child object
 					{
@@ -116,8 +137,9 @@ public class ActivityReadText extends CommonMethods {
 						queryValues.put("tiempo",timestamp);
 						queryValues.put("sincro","0");
 						myDatabase.insert(queryValues,"Log");
-						txt.setText("Relationship:"+ relacion+","+"Parent Object:"+prefs.getString("OPadre", "vacio")+","+"Type of Interaction:"+tipo+"\n"
-								+"Child Object:"+payload+","+"Timer:"+timestamp+"\n");
+
+						showtable(0, prefs.getString("OPadre","SinPadre"),payload, timestamp,null);
+
 
 					}
 				}
@@ -125,46 +147,128 @@ public class ActivityReadText extends CommonMethods {
 				{
 					queryValues.put("objeto",payload);
 					myDatabase.insert(queryValues,"Objetos");
-					txt.setText("Object inserted:"+payload);
+					showtable(1, null, payload, null,null);
 				}
 			}
 			else //Search the database
 			{	
 				SQLiteDatabase db = myDatabase.getWritableDatabase();
-				StringBuffer cadena = new StringBuffer();
+
 				String[] campos = new String[] {"*"};
 				String[] args = new String[] {payload};
 				Cursor c = db.query("Log", campos, "objetoPadre=?", args, null, null, null);
 				if (c.moveToFirst()) {
 					do {
-						String relacion= c.getString(0);
+
 						String objetoPadre = c.getString(1);
 						String objeto = c.getString(2);
-						String interaccion = c.getString(3);
 						String tiempo = c.getString(4);
 						String sincro = c.getString(5);
-						cadena.append(relacion+","+objetoPadre+","+objeto+","+interaccion+","+tiempo+","+sincro+"\n");
+
+
+						showtable(2, objetoPadre, objeto, tiempo,sincro);
 					} while(c.moveToNext());
+
 				}
-				txt.setText("Read TAG :"+payload+"\n"+"List:\n"+cadena);
 			}
 
 		}
 
-		quitButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				finish();
-			}
-		}); 
 	}
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
+
+	private void showtable(int tipo_,String Ppayload,String payload,String tiempo, String sincro)
+	{
+
+		TableRow  row = new TableRow(this);
+		row.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+		layoutParams.setMargins(1, 1, 1, 1);
+		TextView [] tv = new TextView[5];
+	
+		for(int i=0; i< 5; i++)
+		{
+			tv[i] = new TextView(this);
+			tv[i].setText(" ");
+			tv[i].setLayoutParams(layoutParams);
+			tv[i].setBackgroundColor(Color.WHITE);
+			tv[i].setTextSize(14);
+			tv[i].setGravity(Gravity.CENTER);
+			tv[i].setTextColor(Color.BLACK);
+		}
+
+
+		switch (tipo_) {
+		case 0:
+
+			tv[0].setText(relacion);
+			row.addView(tv[0]);
+			tv[1].setText(Ppayload);
+			row.addView(tv[1]);
+
+			if(payload==null)
+			{
+				txt.setText("Insert new Relationship");
+				tv[2].setText(tipo);
+				row.addView(tv[2]);
+				object.setText("Interaction");
+				timestamp.setVisibility(TextView.INVISIBLE);
+				sync.setVisibility(TextView.INVISIBLE);
+			}
+			else
+			{
+				txt.setText("Insert new objects to relationship \nRelationShip:"+relacion+","+prefs.getString("OPadre", "vacio")+","+tipo);
+				tv[2].setText(payload);
+				row.addView(tv[2]);
+				tv[3].setText(tiempo);
+				row.addView(tv[3]);	
+				tv[4].setText("0");
+				row.addView(tv[4]);
+			}
+			table_layout.addView(row);
+			break;
+		case 1:
+			txt.setText("Only insert Objects");
+
+			relation.setText("Object");
+			tv[0].setText(payload);
+			row.addView(tv[0]);
+			object.setVisibility(TextView.INVISIBLE);
+			pObject.setVisibility(TextView.INVISIBLE);
+			timestamp.setVisibility(TextView.INVISIBLE);
+			sync.setVisibility(TextView.INVISIBLE);
+			table_layout.addView(row);
+			break;
+		case 2:
+			txt.setText("Search results with object:"+payload);
+			
+			tv[0].setText(prefs.getString("Relacion","vacio"));
+			row.addView(tv[0]);
+			tv[1].setText(Ppayload);
+			row.addView(tv[1]);
+			tv[2].setText(payload);
+			row.addView(tv[2]);
+			tv[3].setText(tiempo);
+			row.addView(tv[3]);
+			tv[4].setText(sincro);
+			row.addView(tv[4]);
+			table_layout.addView(row);
+			break;
+		default:
+			Log.e("MyTag","no show anything in the table");
+			
+			break;
+		}
+
+
+
+	}
+
+
 
 }
 

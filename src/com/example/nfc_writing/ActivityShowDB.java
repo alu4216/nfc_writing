@@ -2,52 +2,60 @@ package com.example.nfc_writing;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.TableRow.LayoutParams;
 
 public class ActivityShowDB extends ActionBarActivity {
 
 	Database mydatabase;
-
+	TableLayout table_layout;
 	protected void onCreate(Bundle savedInstanceState) { //Show database
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_showdatabase);
 
-		final TextView txt = (TextView)findViewById(R.id.showText);
-		final Button quitButton = (Button)findViewById(R.id.Quit);
+		table_layout = (TableLayout) findViewById(R.id.tableLayout1);
 		mydatabase =  new Database(this, "DB", null, 1);
 		SQLiteDatabase db = mydatabase.getWritableDatabase();
-
-		StringBuffer prueba = new StringBuffer();
 		String[] campos = new String[] {"*"};
 		Cursor c = db.query("Log", campos, null, null, null, null, null);
-		if (c.moveToFirst()) {
-			//Recorremos el cursor hasta que no haya más registros
-			do {
-				String relacion= c.getString(0);
-				String objetoPadre = c.getString(1);
-				String objeto = c.getString(2);
-				String interaccion = c.getString(3);
-				String tiempo = c.getString(4);
-				String sincro = c.getString(5);
-				prueba.append(relacion+","+objetoPadre+","+objeto+","+interaccion+","+tiempo+","+sincro+"\n");
-			} while(c.moveToNext());
-		}
-		txt.setText("Relacion - Type - Sync\n"+prueba.toString());
+		int rows = c.getCount();
+		int cols = c.getColumnCount();
 
-		quitButton.setOnClickListener(new OnClickListener() {
+		c.moveToFirst();
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				finish();
+		for (int i = 0; i < rows; i++) {
+
+			TableRow row = new TableRow(this);
+			row.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
+			for (int j = 0; j < cols; j++) {
+
+				if(j!=3)
+				{
+					LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+					layoutParams.setMargins(1, 1, 1, 1);
+					TextView tv = new TextView(this);
+					tv.setLayoutParams(layoutParams);
+					tv.setBackgroundColor(Color.WHITE);
+					tv.setTextSize(14);
+					tv.setGravity(Gravity.CENTER);
+					tv.setText(c.getString(j));
+					tv.setTextColor(Color.BLACK);
+					row.addView(tv);
+
+
+				}
 			}
-		});	
+			c.moveToNext();
+			table_layout.addView(row);
+		}
+
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,5 +66,5 @@ public class ActivityShowDB extends ActionBarActivity {
 		getMenuInflater().inflate(R.menu.menu2, menu);
 		return true;
 	}
-	
+
 }

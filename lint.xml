@@ -2,4 +2,5 @@
 <lint>
     <issue id="DefaultLocale" severity="ignore" />
     <issue id="InflateParams" severity="ignore" />
+    <issue id="UselessParent" severity="ignore" />
 </lint>

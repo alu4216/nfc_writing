@@ -31,7 +31,12 @@
     <string name="reciver">AutoSyn</string>
     <string name="create_identifier">Create Identifier</string>
     <string name="showDB">show DataBase</string>
-    <string name="showDATABASE">Show DataBase:</string>
+    <string name="showDATABASE">Show table Log:</string>
     <string name="Settings">Settings</string>
+    <string name="Relation">Relation</string>
+    <string name="P_object">P.Object</string>
+    <string name="Object">Object</string>
+    <string name="Timestamp">Timestamp</string>
+    <string name="Sync">Sync</string>
 
 </resources>
