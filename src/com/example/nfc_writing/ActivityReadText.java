@@ -42,7 +42,7 @@ public class ActivityReadText extends CommonMethods {
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.prueba);
+		setContentView(R.layout.activity_readtextplain);
 		txt = (TextView)findViewById(R.id.textView);
 		relation = (TextView)findViewById(R.id.Relation);
 		pObject = (TextView)findViewById(R.id.P_object);

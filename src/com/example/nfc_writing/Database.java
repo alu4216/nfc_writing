@@ -37,6 +37,8 @@ public class Database extends SQLiteOpenHelper {
 		db.execSQL(query);
 		query ="CREATE TABLE Log (relacion TEXT, objetoPadre TEXT,objeto TEXT,interaccion TEXT,tiempo TEXT,sincro INTEGER)";
 		db.execSQL(query);
+		query="CREATE TABLE Conf_spinner (relacion TEXT, interaccion TEXT,PRIMARY KEY(interaccion))";
+		db.execSQL(query);
 	}
 
 	@Override
@@ -53,6 +55,8 @@ public class Database extends SQLiteOpenHelper {
 		db.execSQL(query);
 		query ="DROP TABLE IF EXISTS Log";
 		db.execSQL(query);
+		query="DROP TABLE IF EXIST Conf_spinner";
+		db.execSQL(query);
 		onCreate(db);
 	}
 	/*
@@ -61,7 +65,7 @@ public class Database extends SQLiteOpenHelper {
 	public void insert(HashMap<String, String> queryValues,String table) {
 		SQLiteDatabase database = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
-		
+
 		switch (table) {
 		case "Objetos":
 			values.put("nombre",queryValues.get("objeto"));
@@ -95,11 +99,35 @@ public class Database extends SQLiteOpenHelper {
 			database.insert("Log", null, values);	
 			database.close();
 			break;
+		case "Conf_spinner":
+			values.put("relacion",queryValues.get("relacion"));
+			values.put("interaccion",queryValues.get("interaccion"));
+			database.insert("Conf_spinner", null, values);
+			database.close();
+			break;
 
 		default:
 			database.close();
 			break;
 		}
+	}
+	/*
+	 * Delete data
+	 */
+	public void delete(HashMap<String, String> queryValues,String table) {
+		SQLiteDatabase database = this.getWritableDatabase();
+		switch (table) {
+		case "Conf_spinner":		
+			String query;
+			query = "DELETE FROM Conf_spinner WHERE interaccion='"+queryValues.get("interaccion")+"'";
+			database.execSQL(query);
+			database.close();
+			break;
+		default:
+			database.close();
+			break;
+		}
+
 	}
 	/*
 	 * Get list of data from SQLite DB as Array List
@@ -168,7 +196,7 @@ public class Database extends SQLiteOpenHelper {
 		SQLiteDatabase database = this.getWritableDatabase();    
 
 		String query = new String("Update Log set sincro = '1' where relacion='"+relacion+"'AND objetoPadre='"+objetoPadre+"'" +
-								  "AND objeto='"+objeto+"'AND interaccion='"+interaccion+"'AND tiempo='"+tiempo+"'");
+				"AND objeto='"+objeto+"'AND interaccion='"+interaccion+"'AND tiempo='"+tiempo+"'");
 		//String updateQuery = "Update users set sincro = '"+ status +"' where userId="+"'"+ id +"'";
 		Log.d("query",query);        
 		database.execSQL(query);

@@ -38,5 +38,12 @@
     <string name="Object">Object</string>
     <string name="Timestamp">Timestamp</string>
     <string name="Sync">Sync</string>
+    <string name="interaction">Create Relation-Interaction</string>
+    <string name="Cbox">Enable removal</string>
+    <string name="b_id">"Add"</string>
+    <string name="Relationship">"Relation"</string>
+    <string name="Interaction">"Type of Interaction"</string>
+    
+    
 
 </resources>

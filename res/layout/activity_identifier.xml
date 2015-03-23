@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    
     <TextView
         android:id="@+id/FielText"
         android:layout_width="match_parent"
@@ -16,28 +17,94 @@
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
-    <EditText
-        android:id="@+id/TxtNombre"
-        android:layout_width="match_parent"
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/save"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/FielText"
-        android:layout_marginTop="29dp"
-        android:ems="10"
-        android:inputType="textUri"
-        android:lineSpacingExtra="2dp"
         android:layout_marginLeft="20dp"
-        android:textSize="18sp" >
-    </EditText>
+        android:layout_marginRight="20dp" />
 
     <Button
         android:id="@+id/save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/TxtNombre"
-        android:layout_marginRight="23dp"
-        android:layout_marginTop="26dp"
+        android:layout_below="@+id/spinner1"
+        android:layout_marginRight="14dp"
         android:text="@string/save" />
+
+    <TextView
+        android:id="@+id/FielText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/save"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:paddingLeft="10dp"
+        android:text="@string/interaction"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/FielText1"
+        android:layout_marginTop="14dp"
+        android:padding="10dp"
+        android:shrinkColumns="*"
+        android:stretchColumns="*" >
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <EditText
+                android:id="@+id/TxtRelation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/Relationship"
+                android:inputType="textUri"
+                android:lineSpacingExtra="2dp"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/txtInteraction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/Interaction"
+                android:inputType="textUri"
+                android:lineSpacingExtra="2dp"
+                android:textSize="18sp" />
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/add_delete"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/save"
+        android:layout_alignRight="@+id/save"
+        android:layout_below="@+id/tableLayout1"
+        android:text="@string/b_id" />
+
+    <CheckBox
+        android:id="@+id/checkBox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/add_delete"
+        android:layout_alignBottom="@+id/add_delete"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="25dp"
+        android:text="@string/Cbox" />
+    
 
 </RelativeLayout>
