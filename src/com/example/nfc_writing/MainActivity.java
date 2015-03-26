@@ -243,11 +243,13 @@ public class MainActivity extends ActionBarActivity {
 		try {
 
 			JSONArray arr = new JSONArray(response);
+			System.out.println("------TRAER-----------");
 			System.out.println(arr.length());
 			if(arr.length() != 0){
 				for (int i = 0; i < arr.length(); i++) {
 					// Get JSON object
 					JSONObject obj = (JSONObject) arr.get(i);
+					
 					System.out.println(obj.get("relacion"));
 					System.out.println(obj.get("objetoPadre"));
 					System.out.println(obj.get("objeto"));
@@ -348,6 +350,7 @@ public class MainActivity extends ActionBarActivity {
 							System.out.println(cadena);
 							try {
 								JSONArray arr = new JSONArray(cadena);
+								System.out.println("------ENVIAR-----------");
 								System.out.println(arr.length());
 								for(int i=0; i<arr.length();i++){
 									JSONObject obj = (JSONObject)arr.get(i);

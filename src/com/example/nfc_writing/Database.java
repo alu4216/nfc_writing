@@ -198,7 +198,7 @@ public class Database extends SQLiteOpenHelper {
 		String query = new String("Update Log set sincro = '1' where relacion='"+relacion+"'AND objetoPadre='"+objetoPadre+"'" +
 				"AND objeto='"+objeto+"'AND interaccion='"+interaccion+"'AND tiempo='"+tiempo+"'");
 		//String updateQuery = "Update users set sincro = '"+ status +"' where userId="+"'"+ id +"'";
-		Log.d("query",query);        
+		Log.d("query_updateSyncStatus",query);        
 		database.execSQL(query);
 		database.close();
 	}

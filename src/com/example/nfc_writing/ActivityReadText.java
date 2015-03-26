@@ -120,7 +120,7 @@ public class ActivityReadText extends CommonMethods {
 						queryValues.put("interaccion",tipo);
 						myDatabase.insert(queryValues,"RCruzadas");
 
-						showtable(0, payload, null, null,null);
+						showtable(0,null, payload, null, null,null);
 
 
 					}
@@ -138,7 +138,7 @@ public class ActivityReadText extends CommonMethods {
 						queryValues.put("sincro","0");
 						myDatabase.insert(queryValues,"Log");
 
-						showtable(0, prefs.getString("OPadre","SinPadre"),payload, timestamp,null);
+						showtable(0, null,prefs.getString("OPadre","SinPadre"),payload, timestamp,null);
 
 
 					}
@@ -147,7 +147,7 @@ public class ActivityReadText extends CommonMethods {
 				{
 					queryValues.put("objeto",payload);
 					myDatabase.insert(queryValues,"Objetos");
-					showtable(1, null, payload, null,null);
+					showtable(1, null,null, payload, null,null);
 				}
 			}
 			else //Search the database
@@ -159,14 +159,14 @@ public class ActivityReadText extends CommonMethods {
 				Cursor c = db.query("Log", campos, "objetoPadre=?", args, null, null, null);
 				if (c.moveToFirst()) {
 					do {
-
+						String relacion_ = c.getString(0);
 						String objetoPadre = c.getString(1);
 						String objeto = c.getString(2);
 						String tiempo = c.getString(4);
 						String sincro = c.getString(5);
 
 
-						showtable(2, objetoPadre, objeto, tiempo,sincro);
+						showtable(2, relacion_,objetoPadre, objeto, tiempo,sincro);
 					} while(c.moveToNext());
 
 				}
@@ -181,7 +181,7 @@ public class ActivityReadText extends CommonMethods {
 		super.onConfigurationChanged(newConfig);
 	}
 
-	private void showtable(int tipo_,String Ppayload,String payload,String tiempo, String sincro)
+	private void showtable(int tipo_,String relacion_,String Ppayload,String payload,String tiempo, String sincro)
 	{
 
 		TableRow  row = new TableRow(this);
@@ -246,7 +246,7 @@ public class ActivityReadText extends CommonMethods {
 		case 2:
 			txt.setText("Search results with object:"+payload);
 			
-			tv[0].setText(prefs.getString("Relacion","vacio"));
+			tv[0].setText(relacion_);
 			row.addView(tv[0]);
 			tv[1].setText(Ppayload);
 			row.addView(tv[1]);
