@@ -124,7 +124,7 @@ public class MainActivity extends ActionBarActivity {
 				finish();
 				moveTaskToBack(true);
 				System.exit(0);
-				
+
 			}
 		});	
 
@@ -200,11 +200,11 @@ public class MainActivity extends ActionBarActivity {
 	 ***************************************************************************************************************************************************/
 	//Get data
 	public void syncSQLiteMySQLDB() { 
-		
+
 		AsyncHttpClient client = new AsyncHttpClient();
 		RequestParams params = new RequestParams();
-	
-		client.post("http://192.168.0.10:80/nfc/getusers.php", params, new AsyncHttpResponseHandler() {
+
+		client.post("http://192.168.0.13:80/nfc/getusers.php", params, new AsyncHttpResponseHandler() {
 			@Override
 			public void onFailure(int statusCode, Header[] content, byte[] arg2, Throwable error) {
 				prgDialog.hide();
@@ -249,14 +249,14 @@ public class MainActivity extends ActionBarActivity {
 				for (int i = 0; i < arr.length(); i++) {
 					// Get JSON object
 					JSONObject obj = (JSONObject) arr.get(i);
-					
+
 					System.out.println(obj.get("relacion"));
 					System.out.println(obj.get("objetoPadre"));
 					System.out.println(obj.get("objeto"));
 					System.out.println(obj.get("interaccion"));
 					System.out.println(obj.get("tiempo"));
 					System.out.println(obj.get("sincro"));
-					
+
 					// DB QueryValues Object to insert into SQLite
 					queryValues = new HashMap<String, String>();
 					queryValues.put("relacion", obj.get("relacion").toString());
@@ -264,10 +264,18 @@ public class MainActivity extends ActionBarActivity {
 					queryValues.put("objeto", obj.get("objeto").toString());
 					queryValues.put("interaccion", obj.get("interaccion").toString());
 					queryValues.put("tiempo", obj.get("tiempo").toString());
-					queryValues.put("sincro", obj.get("sincro").toString());
-					// Insert User into SQLite DB
-					mydatabase.insert(queryValues,"Log");
-
+					
+					// Insert or delete data into SQLite DB
+					if(obj.getInt("sincro") == 2)
+					{
+						mydatabase.delete(queryValues, "Log");
+						queryValues.put("sincro", "3");
+					}
+					else
+					{
+						queryValues.put("sincro", "1");
+						mydatabase.insert(queryValues,"Log");
+					}
 					// Add status for each User in Hashmap
 					usersynclist.add(queryValues);
 				}
@@ -285,8 +293,8 @@ public class MainActivity extends ActionBarActivity {
 		AsyncHttpClient client = new AsyncHttpClient();
 		RequestParams params = new RequestParams();
 		params.put("sincro", json);
-		
-		client.post("http://192.168.0.10:80/nfc/updatesyncsts.php", params, new AsyncHttpResponseHandler() {
+
+		client.post("http://192.168.0.13:80/nfc/updatesyncsts.php", params, new AsyncHttpResponseHandler() {
 
 			@Override
 			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
@@ -307,8 +315,8 @@ public class MainActivity extends ActionBarActivity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-			
+
+
 			}
 		});
 	}
@@ -325,7 +333,7 @@ public class MainActivity extends ActionBarActivity {
 			if(mydatabase.dbSyncCount() != 0){
 				prgDialog.show();
 				params.put("usersJSON",mydatabase.composeJSONfromSQLite());
-				client.post("http://192.168.0.10:80/nfc/insertuser_.php",params ,new AsyncHttpResponseHandler() {
+				client.post("http://192.168.0.13:80/nfc/insertuser_.php",params ,new AsyncHttpResponseHandler() {
 
 					@Override
 					public void onFailure(int statusCode, Header[] arg1, byte[] arg2, Throwable arg3) {

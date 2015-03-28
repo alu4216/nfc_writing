@@ -12,7 +12,7 @@
             $b["objeto"] = $row["objeto"];
 			$b["interaccion"] = $row["interaccion"];
 			$b["tiempo"] = $row["tiempo"];
-            $b["sincro"] = "1";
+            $b["sincro"] = $row["sincro"];
             array_push($a,$b);
 		}
 		echo json_encode($a);

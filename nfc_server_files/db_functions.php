@@ -44,15 +44,38 @@ class DB_Functions {
      * Get Yet to Sync row Count
      */
     public function getUnSyncRowCount() {
-        $result = mysql_query("SELECT * FROM log WHERE sincro = FALSE");
+        $result = mysql_query("SELECT * FROM log WHERE sincro = '0' OR sincro = '2'");
         return $result;
     }
 
     public function updateSyncSts($relacion,$objetoPadre,$objeto,$interaccion,$tiempo,$sincro){
-       
-        $result = mysql_query("UPDATE log SET sincro = '$sincro'  WHERE relacion = '$relacion'AND objetoPadre= '$objetoPadre'AND objeto='$objeto'AND interaccion='$interaccion'
+
+        if($sincro == "3")
+        {
+            $result = mysql_query("DELETE FROM log WHERE relacion = '$relacion'AND objetoPadre= '$objetoPadre'AND objeto='$objeto'AND interaccion='$interaccion'
                               AND tiempo='$tiempo'");
+        }
+        else
+        {
+            $result = mysql_query("UPDATE log SET sincro = '$sincro'  WHERE relacion = '$relacion'AND objetoPadre= '$objetoPadre'AND objeto='$objeto'AND interaccion='$interaccion'
+                              AND tiempo='$tiempo'");
+
+        }
         return $result;
+    }
+    public function delete($tiempo){
+
+        $query=mysql_query("SELECT * FROM LOG WHERE tiempo='$tiempo'");
+        if(mysql_num_rows($query)>0)
+        {
+            $result = mysql_query("UPDATE log SET sincro = 2 WHERE tiempo ='$tiempo'");
+            return $result;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 }
 

@@ -27,18 +27,33 @@ public class Database extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
 		String query;
-		query ="CREATE TABLE Objetos (nombre TEXT)";
+		query ="CREATE TABLE Objetos (nombre TEXT,PRIMARY KEY(nombre))";
 		db.execSQL(query);
-		query ="CREATE TABLE Interaccion (nombre TEXT)";
+		query ="CREATE TABLE Interaccion (nombre TEXT,PRIMARY KEY(nombre))";
 		db.execSQL(query);
-		query ="CREATE TABLE Relacion (nombre TEXT)";
+		query ="CREATE TABLE Relacion (nombre TEXT,PRIMARY KEY(nombre))";
 		db.execSQL(query);
-		query ="CREATE TABLE RCruzadas (relacion TEXT, objeto TEXT,interaccion TEXT)";
+		query ="CREATE TABLE RCruzadas (relacion TEXT, objeto TEXT,interaccion TEXT,PRIMARY KEY(relacion,objeto,interaccion))";
 		db.execSQL(query);
-		query ="CREATE TABLE Log (relacion TEXT, objetoPadre TEXT,objeto TEXT,interaccion TEXT,tiempo TEXT,sincro INTEGER)";
+		query ="CREATE TABLE Log (relacion TEXT, objetoPadre TEXT,objeto TEXT,interaccion TEXT,tiempo TEXT,sincro INTEGER,PRIMARY KEY(tiempo))";
 		db.execSQL(query);
 		query="CREATE TABLE Conf_spinner (relacion TEXT, interaccion TEXT,PRIMARY KEY(interaccion))";
 		db.execSQL(query);
+
+		query= "CREATE TRIGGER eliminar AFTER DELETE ON Log " +
+				"FOR EACH ROW "+
+				"BEGIN "+
+				"DELETE FROM Objetos WHERE NOT EXISTS (SELECT objeto " +
+				"FROM Log WHERE objeto=Objetos.nombre OR objetoPadre=Objetos.nombre);\n" +
+				"DELETE FROM Relacion WHERE NOT EXISTS (SELECT relacion FROM Log WHERE relacion=Relacion.nombre);\n" +
+				"DELETE FROM Interaccion WHERE NOT EXISTS (SELECT interaccion " +
+				"FROM Log WHERE interaccion=Interaccion.nombre);\n" +
+				"DELETE FROM RCruzadas WHERE NOT EXISTS (SELECT relacion,objetoPadre " +
+				"FROM log WHERE relacion=RCruzadas.relacion AND objetoPadre=RCruzadas.objeto);\n" +
+				"END";
+
+		db.execSQL(query);
+
 	}
 
 	@Override
@@ -116,9 +131,15 @@ public class Database extends SQLiteOpenHelper {
 	 */
 	public void delete(HashMap<String, String> queryValues,String table) {
 		SQLiteDatabase database = this.getWritableDatabase();
+		String query;
 		switch (table) {
+		case "Log":
+			query = "DELETE FROM Log WHERE relacion='"+queryValues.get("relacion")+"'AND objetoPadre='"+queryValues.get("objetoPadre")+"'" +
+					"AND objeto='"+queryValues.get("objeto")+"'AND interaccion='"+queryValues.get("interaccion")+"'AND tiempo='"+queryValues.get("tiempo")+"'";
+			database.execSQL(query);
+			database.close();
+			break;
 		case "Conf_spinner":		
-			String query;
 			query = "DELETE FROM Conf_spinner WHERE interaccion='"+queryValues.get("interaccion")+"'";
 			database.execSQL(query);
 			database.close();
@@ -128,7 +149,7 @@ public class Database extends SQLiteOpenHelper {
 			break;
 		}
 
-	}
+	}	
 	/*
 	 * Get list of data from SQLite DB as Array List
 	 */

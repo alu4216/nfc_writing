@@ -51,7 +51,7 @@ public class ActivityIdentifier extends ActionBarActivity {
 		myDatabase = new Database(this, "DB", null, 1);
 		queryValues = new HashMap<String, String>();
 		final SQLiteDatabase db = myDatabase.getWritableDatabase();
-		Cursor c = db.rawQuery("SELECT interaccion FROM Conf_spinner", null);
+		final Cursor c = db.rawQuery("SELECT interaccion FROM Conf_spinner", null);
 		list = new ArrayList<String>();
 
 
@@ -92,25 +92,47 @@ public class ActivityIdentifier extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				Cursor c = db.rawQuery("SELECT * FROM Conf_spinner WHERE interaccion='"+interaction.getText().toString()+"'", null);
 
-				if(box.isChecked())
+				if(box.isChecked())					
 				{
-					queryValues.clear();
-					queryValues.put("interaccion",interaction.getText().toString());
-					myDatabase.delete(queryValues,"Conf_spinner");
 
+					if(c.getCount() > 0)
+					{
+						queryValues.clear();
+						queryValues.put("interaccion",interaction.getText().toString());
+						myDatabase.delete(queryValues,"Conf_spinner");
+						myDatabase.close();	
+						reiniciar();
+					}
+					else
+					{
+						showmessage(2);
+					}
 				}
 				else
 				{	
-					queryValues.clear();
-					queryValues.put("relacion",relation.getText().toString());
-					queryValues.put("interaccion",interaction.getText().toString());
-					myDatabase.insert(queryValues, "Conf_spinner");
-					myDatabase.insert(queryValues, "Interaccion");
-					myDatabase.insert(queryValues,"Relacion");
+
+
+					if(c.getCount() ==0)
+					{
+						queryValues.clear();
+						queryValues.put("relacion",relation.getText().toString());
+						queryValues.put("interaccion",interaction.getText().toString());
+						myDatabase.insert(queryValues, "Conf_spinner");
+						myDatabase.insert(queryValues, "Interaccion");
+						myDatabase.insert(queryValues,"Relacion");
+						myDatabase.close();	
+						reiniciar();	
+					}
+					else
+					{
+						showmessage(1);
+					}
+
 				}
-				myDatabase.close();
-				reiniciar();
+
+
 			}
 		});
 
@@ -119,14 +141,14 @@ public class ActivityIdentifier extends ActionBarActivity {
 			@Override
 			public void onClick(View v) { //Choose type of interaction and store in preferences 
 				// TODO Auto-generated method stub
-		
+
 
 				editor.putString("Lmultiple", data);
 				editor.putBoolean("LMactive", true);
 				editor.putBoolean("OPactive",true);
 				editor.commit();
 
-				showmessage();
+				showmessage(0);
 				Intent intent = new Intent(ActivityIdentifier.this, ActivityMenuRead.class);
 				startActivity(intent);
 				finish();
@@ -137,8 +159,8 @@ public class ActivityIdentifier extends ActionBarActivity {
 				new AdapterView.OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> parent,
 							android.view.View v, int position, long id) {
-						
-					
+
+
 						data = desplegable.getSelectedItem().toString();
 						Cursor c = db.rawQuery("SELECT relacion FROM Conf_spinner WHERE interaccion='"+data+"'", null);
 						if (c.moveToFirst()) {
@@ -146,10 +168,10 @@ public class ActivityIdentifier extends ActionBarActivity {
 							do {
 								editor.putString("Relacion",c.getString(0));
 							} while(c.moveToNext());
-							
+
 							editor.commit();
 						}
-						
+
 					}
 
 					@Override
@@ -163,7 +185,7 @@ public class ActivityIdentifier extends ActionBarActivity {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				// TODO Auto-generated method stub
-		
+
 
 				if(box.isChecked())
 				{
@@ -182,9 +204,23 @@ public class ActivityIdentifier extends ActionBarActivity {
 			}
 		});
 	}
-	private void showmessage() //Show messaging 
+	private void showmessage(int index) //Show messaging 
 	{
-		Toast.makeText(this,"Activated group reading", Toast.LENGTH_SHORT).show();
+		switch(index)
+		{
+		case 0: 
+			Toast.makeText(this,"Activated group reading", Toast.LENGTH_SHORT).show();
+			break;
+		case 1:
+			Toast.makeText(this,"Interaction already exists", Toast.LENGTH_SHORT).show();
+			break;
+		case 2:			
+			Toast.makeText(this,"Interaction not exist ", Toast.LENGTH_SHORT).show();
+			break;
+		default:
+			break;
+		}
+
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

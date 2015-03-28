@@ -77,7 +77,7 @@ else
 if ($no_of_users > 0) {
         ?>
         <table>
-            <tr id="header"><td>Relationship</td><td>ParentObject</td><td>ChildObject</td><td>Interaction</td><td>Time</td><td>Sync</td></tr>
+            <tr id="header"><td>Relation</td><td>ParentObject</td><td>ChildObject</td><td>Interaction</td><td>Time</td><td>Sync</td></tr>
             <?php
     while ($row = mysql_fetch_array($users)) {
             ?> 
@@ -89,10 +89,13 @@ if ($no_of_users > 0) {
                 <td><span><?php echo $row["tiempo"] ?></span></td>
                 <td id="sync"><span>
                     <?php 
-                if($row["sincro"])
+                if($row["sincro"]=="1")
             { 
                 echo "<img src='img/green.png'/>"; 
-            }else { 
+            }else if($row["sincro"]=="2")
+            {
+                echo "<img src='img/black.png'/>";
+            }else  { 
                 echo "<img src='img/white.png'/>";
             } 
                     ?></span></td>
