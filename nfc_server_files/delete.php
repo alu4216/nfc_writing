@@ -29,7 +29,7 @@
         margin-right: auto;
         text-align: center;
     }
-        div#boton{
+    div#boton{
         margin-top:10px;
         width: 30%;
         margin-left: auto;
@@ -58,12 +58,41 @@ if(isset($_POST["tiempo"]) && !empty($_POST["tiempo"])){
     $tiempo = $_POST["tiempo"];
     $res = $db->delete($tiempo);
     //Based on inserttion, create JSON response
-    if($res){ ?>
-<div id="msg">Delete successful</div>
+    if($res){ 
+	
+        $pushMessage = "Deleted Data";
+        $gcmRegID  = file_get_contents("GCMRegId.txt");
+        if (isset($gcmRegID) && isset( $pushMessage)) {		
+            $gcmRegIds = array($gcmRegID);
+            $message = array("m" => $pushMessage);	
+            $pushStatus = $db->sendMessageThroughGCM($gcmRegIds, $message);	
+        }
+?>
+<div id="msg">Deleted successfully.GCM status:<?php echo $pushStatus; ?></div>
 <?php }else{ ?>
-<div id="msg">Delete failed</div>
+<div id="msg">Deleted failed</div>
 <?php }
 }  else{ ?>
 <div id="msg">Please enter data and submit</div>
 <?php }
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

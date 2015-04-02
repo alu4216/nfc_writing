@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE RelativeLayout>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.nfc_writing"
     android:versionCode="1"
@@ -11,7 +12,7 @@
         android:required="true" />
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="16"
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -21,11 +22,29 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- GCM Permissions - End here -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.example.nfc_writing.permission.C2D_MESSAGE" />
+
+    <permission
+        android:name="com.example.nfc_writing.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -39,23 +58,28 @@
         <activity
             android:name=".ActivityMenuWrite"
             android:label="@string/title_activity_MenuWrite"
+            android:parentActivityName="com.example.nfc_writing.MainActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".ActivityWriteUrl"
-            android:label="@string/title_activity_WriteUrl" >
+            android:label="@string/title_activity_WriteUrl"
+            android:parentActivityName="com.example.nfc_writing.ActivityMenuWrite" >
         </activity>
         <activity
             android:name=".ActivityWriteText"
-            android:label="@string/title_activity_WriteText" >
+            android:label="@string/title_activity_WriteText"
+            android:parentActivityName="com.example.nfc_writing.ActivityMenuWrite" >
         </activity>
         <activity
             android:name=".ActivityMenuRead"
-            android:label="@string/title_activity_MenuRead" >
+            android:label="@string/title_activity_MenuRead"
+            android:parentActivityName="com.example.nfc_writing.MainActivity" >
         </activity>
         <activity
             android:name=".ActivityReadUrl"
-            android:label="@string/title_activity_ReadUrl" >
+            android:label="@string/title_activity_ReadUrl"
+            android:parentActivityName="com.example.nfc_writing.ActivityMenuRead" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
@@ -70,7 +94,8 @@
         <activity
             android:name=".ActivityReadText"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
-            android:label="@string/title_activity_ReadText" >
+            android:label="@string/title_activity_ReadText"
+            android:parentActivityName="com.example.nfc_writing.ActivityMenuRead" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
@@ -81,24 +106,34 @@
         </activity>
         <activity
             android:name=".ActivityIdentifier"
-            android:label="@string/title_activity_identifier" >
+            android:label="@string/title_activity_identifier"
+            android:parentActivityName="com.example.nfc_writing.MainActivity" >
         </activity>
         <activity
             android:name=".ActivityShowDB"
-            android:label="@string/title_activity_show_DB" >
+            android:label="@string/title_activity_show_DB"
+            android:parentActivityName="com.example.nfc_writing.MainActivity" >
         </activity>
         <activity
             android:name=".ActivityShowSetting"
-            android:label="@string/title_activity_show_settings" >
+            android:label="@string/title_activity_show_settings"
+            android:parentActivityName="com.example.nfc_writing.MainActivity" >
         </activity>
-        <!-- Register MyService -->
-        <service
-            android:name=".MyService"
-            android:enabled="true" />
+
         <!-- Register BroadCase Receiver -->
         <receiver
-            android:name=".SampleBC"
-            android:process=":remote" />
+            android:name=".GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.example.nfc_writing.example" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Register Service -->
+        <service android:name=".GCMNotificationIntentService" />
     </application>
 
 </manifest>

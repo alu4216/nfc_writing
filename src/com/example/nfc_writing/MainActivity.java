@@ -1,8 +1,9 @@
 package com.example.nfc_writing;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 import org.apache.http.Header;
@@ -10,14 +11,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +28,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
@@ -34,13 +40,16 @@ import com.loopj.android.http.RequestParams;
 
 public class MainActivity extends ActionBarActivity {
 
-	boolean  reciver;
-	ProgressDialog prgDialog;
-	HashMap<String, String> queryValues;
-	Database mydatabase;
-	Intent alarmIntent;
-	PendingIntent pendingIntent;
-	AlarmManager alarmManager;
+	private ProgressDialog prgDialog;
+	private HashMap<String, String> queryValues;
+	private Database mydatabase;
+	private GoogleCloudMessaging gcmObj;
+	private Context applicationContext;
+	private String regId = "";
+	private static final String REG_ID = "regId";
+	private static final String PROPERTY_EXPIRATION_TIME = "onServerExpirationTimeMs";
+	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+	public static final long EXPIRATION_TIME_MS = 1000 * 3600 * 24 * 7;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,8 +61,9 @@ public class MainActivity extends ActionBarActivity {
 		prgDialog = new ProgressDialog(this);
 		prgDialog.setMessage("Transferring Data between Remote MySQL DB and Squilite mobile phone DB.Please wait...");
 		prgDialog.setCancelable(false);
-		reciver = false;
 		mydatabase =  new Database(this, "DB", null, 1);
+
+		initGCM();//Initialize Service of Google Cloud Messaging
 
 
 		/*NfcAdapter mNfcAdapter=NfcAdapter.getDefaultAdapter(this);
@@ -63,7 +73,6 @@ public class MainActivity extends ActionBarActivity {
 			Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
 			finish();
 			return;
-
 		} 
 		else
 		{
@@ -71,14 +80,9 @@ public class MainActivity extends ActionBarActivity {
 
 		}*/
 
-		// BroadCase Receiver Intent Object
-		// Alarm Manager Object
-		alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-		alarmIntent = new Intent(getApplicationContext(), SampleBC.class);
-		// Pending Intent Object
-		pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
+		/*
+		 * Button options
+		 */
 
 		writeButton.setOnClickListener(new OnClickListener() {
 
@@ -130,6 +134,7 @@ public class MainActivity extends ActionBarActivity {
 
 	}
 
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -163,37 +168,12 @@ public class MainActivity extends ActionBarActivity {
 			Intent intent = new Intent(MainActivity.this,ActivityShowSetting.class);
 			startActivity(intent);
 			return true;
-		case R.id.reciver:
-			if(reciver == false)
-			{
-				reciver = true;
-				activeReciver(reciver);
-			}
-			else
-			{
-				reciver = false;
-				activeReciver(reciver);
-			}
+		case R.id.gcm_syncs:
+			initGCM();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-	public void activeReciver(boolean reciver)
-	{
-		if(reciver == true)
-		{
-			// Alarm Manager calls BroadCast for every Ten seconds (10 * 1000), BroadCase further calls service to check if new records are inserted in 
-			// Remote MySQL DB
-			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 5000, 10 * 1000, pendingIntent);
-			Toast.makeText(getApplicationContext(), "Reciver active", Toast.LENGTH_LONG).show();
-		}
-		else
-		{
-			alarmManager.cancel(pendingIntent);
-			Toast.makeText(getApplicationContext(), "Disable active", Toast.LENGTH_LONG).show();
-		}
-
 	}
 	/****************************************************************************************************************************************************
 	 * MySql to SQlite																																	*
@@ -264,7 +244,7 @@ public class MainActivity extends ActionBarActivity {
 					queryValues.put("objeto", obj.get("objeto").toString());
 					queryValues.put("interaccion", obj.get("interaccion").toString());
 					queryValues.put("tiempo", obj.get("tiempo").toString());
-					
+
 					// Insert or delete data into SQLite DB
 					if(obj.getInt("sincro") == 2)
 					{
@@ -386,6 +366,158 @@ public class MainActivity extends ActionBarActivity {
 				});
 			}
 		}
+	}
+	/***************************************************************************************************************************
+	 * GMC																								   					   *
+	 ***************************************************************************************************************************/
+	void initGCM()
+	{
+		SharedPreferences prefs = getSharedPreferences("MyPreferences",Context.MODE_PRIVATE);
+		String registrationId = prefs.getString(REG_ID, "");
+		long expirationTime =prefs.getLong(PROPERTY_EXPIRATION_TIME, -1);
+		applicationContext = getApplicationContext();
+		
+		if (registrationId == "") 
+		{
+			// Check if Google Play Service is installed in Device
+			// Play services is needed to handle GCM stuffs
+			if (checkPlayServices()) 
+			{
+				// Register Device in GCM Server
+				registerInBackground();
+			}
+		}
+		else
+		{
+			if(System.currentTimeMillis() > expirationTime)
+			{
+				/*try {
+					gcmObj.unregister();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
+				registerInBackground();
+			}
+			else
+			{
+				Log.e("MyTag","Sincronizado ya");
+			}
+		}
+	}
+
+	private void registerInBackground() { 
+		new AsyncTask<Void, Void, String>() {
+			@Override
+			protected String doInBackground(Void... params) {
+				String msg = "";
+				try {
+					if (gcmObj == null) {
+						gcmObj = GoogleCloudMessaging
+								.getInstance(getApplicationContext());
+					}
+					regId = gcmObj.register(ApplicationConstants.GOOGLE_PROJ_ID);
+					msg = "Registration ID :" + regId;
+					System.out.println(msg);
+					Log.e("MyTag",msg);
+
+				} catch (IOException ex) {
+					msg = "Error :" + ex.getMessage();
+				}
+				return msg;
+			}
+
+			@Override
+			protected void onPostExecute(String msg) {
+				if (!TextUtils.isEmpty(regId)) {
+					// Store RegId created by GCM Server in SharedPref
+					storeRegIdinSharedPref(applicationContext, regId);
+					Toast.makeText(applicationContext,"Registered with GCM Server successfully.\n\n"+ msg, Toast.LENGTH_SHORT).show();
+				} else { 
+					Toast.makeText(applicationContext,
+							"Reg ID Creation Failed.\n\nEither you haven't enabled Internet or GCM server is busy right now. Make sure you enabled Internet and try registering again after some time."
+									+ msg, Toast.LENGTH_LONG).show();
+				}
+			}
+		}.execute(null, null, null);
+	}
+
+	private void storeRegIdinSharedPref(Context context, String regId) {
+		SharedPreferences prefs = getSharedPreferences("MyPreferences",Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(REG_ID, regId);
+		editor.putLong(PROPERTY_EXPIRATION_TIME, System.currentTimeMillis() + EXPIRATION_TIME_MS);
+		editor.commit();
+		storeRegIdinServer();
+	}
+
+	private void storeRegIdinServer() {
+		AsyncHttpClient client = new AsyncHttpClient();
+		// Http Request Params Object
+		RequestParams params = new RequestParams();
+		params.put("regId", regId);
+		client.post(ApplicationConstants.APP_SERVER_URL, params,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http
+			// response code '200'
+			@Override
+			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+				Toast.makeText(applicationContext,"Reg Id shared successfully with Web App ",Toast.LENGTH_LONG).show();
+			}
+
+			// When the response returned by REST has Http
+			// response code other than '200' such as '404',
+			// '500' or '403' etc
+			@Override
+			public void onFailure(int statusCode, Header[] arg1, byte[] arg2,
+					Throwable arg3) {
+				// When Http response code is '404'
+				if (statusCode == 404) {
+					Toast.makeText(applicationContext,
+							"Requested resource not found",
+							Toast.LENGTH_LONG).show();
+				}
+				// When Http response code is '500'
+				else if (statusCode == 500) {
+					Toast.makeText(applicationContext,
+							"Something went wrong at server end",
+							Toast.LENGTH_LONG).show();
+				}
+				// When Http response code other than 404, 500
+				else {
+					Toast.makeText(
+							applicationContext,
+							"Unexpected Error occcured! [Most common Error: Device might "
+									+ "not be connected to Internet or remote server is not up and running], check for other errors as well",
+									Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+	}
+	// Check if Google Playservices is installed in Device or not
+	private boolean checkPlayServices() {
+		int resultCode = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(this);
+		// When Play services not found in device
+		if (resultCode != ConnectionResult.SUCCESS) {
+			if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+				// Show Error dialog to install Play services
+				GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+						PLAY_SERVICES_RESOLUTION_REQUEST).show();
+			} else {
+				Toast.makeText(
+						applicationContext,
+						"This device doesn't support Play services, App will not work normally",
+						Toast.LENGTH_LONG).show();
+				finish();
+			}
+			return false;
+		} else {
+			Toast.makeText(
+					applicationContext,
+					"This device supports Play services, App will work normally",
+					Toast.LENGTH_LONG).show();
+		}
+		return true;
 	}
 }
 

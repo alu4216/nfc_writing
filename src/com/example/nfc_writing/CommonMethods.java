@@ -24,7 +24,9 @@ public class CommonMethods extends ActionBarActivity {
 		getSupportActionBar().setIcon(R.drawable.ic_launcher);
 		getSupportActionBar().setTitle(" "+getTitle());
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
+		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_atras);
 		getMenuInflater().inflate(R.menu.menu2, menu);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
 	

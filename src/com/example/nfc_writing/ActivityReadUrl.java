@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 public class ActivityReadUrl extends CommonMethods {
 
-	byte payloadHeader;
-	String payload;
+	private byte payloadHeader;
+	private String payload;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

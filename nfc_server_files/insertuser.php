@@ -67,8 +67,19 @@ if(isset($_POST["relation"]) && !empty($_POST["relation"])&& isset($_POST["paren
     $time=$fecha->getTimestamp();
     $timestamp=idate('U', $time);
     $res = $db->storeUser($relation,$pObject,$object,$interaction,$timestamp,"0");
-    if($res){ ?>
-<div id="msg">Insertion successful</div>
+    if($res){ 
+        //Post message to GCM when submitted
+        $pushStatus = "New Data";	
+        $pushMessage = "New Data";
+        $gcmRegID  = file_get_contents("GCMRegId.txt");
+        if (isset($gcmRegID) && isset( $pushMessage)) {		
+            $gcmRegIds = array($gcmRegID);
+            $message = array("m" => $pushMessage);	
+            $pushStatus = $db->sendMessageThroughGCM($gcmRegIds, $message);	
+        }
+?>
+<div id="msg">Insertion successful.GCM status:<?php echo $pushStatus; ?></div>
+
 <?php }else{ ?>
 <div id="msg">Insertion failed</div>
 <?php }

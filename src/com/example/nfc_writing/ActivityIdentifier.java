@@ -26,11 +26,11 @@ import android.widget.Toast;
 
 public class ActivityIdentifier extends ActionBarActivity {
 
-	SharedPreferences prefs; 
-	Database myDatabase; 
-	HashMap<String, String> queryValues;
-	String data;
-	List<String> list;
+	private SharedPreferences prefs; 
+	private Database myDatabase; 
+	private HashMap<String, String> queryValues;
+	private String data;
+	private List<String> list;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_identifier);
@@ -229,6 +229,8 @@ public class ActivityIdentifier extends ActionBarActivity {
 		getSupportActionBar().setTitle(" "+getTitle());
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		getMenuInflater().inflate(R.menu.menu2, menu);
+		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_atras);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
 	@Override

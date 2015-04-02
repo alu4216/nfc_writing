@@ -14,8 +14,8 @@ import android.widget.TableRow.LayoutParams;
 
 public class ActivityShowDB extends ActionBarActivity {
 
-	Database mydatabase;
-	TableLayout table_layout;
+	private Database mydatabase;
+	private TableLayout table_layout;
 	protected void onCreate(Bundle savedInstanceState) { //Show database
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_showdatabase);
@@ -64,6 +64,8 @@ public class ActivityShowDB extends ActionBarActivity {
 		getSupportActionBar().setTitle(" "+getTitle());
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		getMenuInflater().inflate(R.menu.menu2, menu);
+		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_atras);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
 

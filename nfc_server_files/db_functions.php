@@ -65,17 +65,47 @@ class DB_Functions {
     }
     public function delete($tiempo){
 
-        $query=mysql_query("SELECT * FROM LOG WHERE tiempo='$tiempo'");
+        $query=mysql_query("SELECT * FROM LOG WHERE tiempo='$tiempo'AND sincro=1");
         if(mysql_num_rows($query)>0)
         {
             $result = mysql_query("UPDATE log SET sincro = 2 WHERE tiempo ='$tiempo'");
             return $result;
         }
-        else
+        $query=mysql_query("SELECT * FROM LOG WHERE tiempo='$tiempo'");
+        if(mysql_num_rows($query)>0)
         {
-            return false;
-        }
+            $result = mysql_query("DELETE FROM log WHERE tiempo ='$tiempo'AND sincro=0");
+            return $result;
+        }  
 
+    }
+    public function sendMessageThroughGCM($registatoin_ids, $message) {
+        //Google cloud messaging GCM-API url
+        require_once 'config.php';
+        $url = 'https://android.googleapis.com/gcm/send';
+        $fields = array(
+            'registration_ids' => $registatoin_ids,
+            'data' => $message,
+        );
+        // Update your Google Cloud Messaging API Key	
+        $headers = array(
+            'Authorization: key=' . GOOGLE_API_KEY,
+            'Content-Type: application/json'
+        );
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);	
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        $result = curl_exec($ch);				
+        if ($result === FALSE) {
+            die('Curl failed: ' . curl_error($ch));
+        }
+        curl_close($ch);
+        return $result;
     }
 }
 

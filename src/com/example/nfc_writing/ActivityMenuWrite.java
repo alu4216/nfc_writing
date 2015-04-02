@@ -58,6 +58,9 @@ public class ActivityMenuWrite extends ActionBarActivity {
 		getSupportActionBar().setTitle(" "+getTitle());
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		getMenuInflater().inflate(R.menu.menu2, menu);
+		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_atras);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);	
+		
 		return true;
 	}
 	

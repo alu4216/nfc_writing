@@ -22,23 +22,22 @@ import android.widget.TableRow.LayoutParams;
 
 public class ActivityReadText extends CommonMethods {
 
-	StringBuffer myText;
-	String aux;
-	byte statusByte;
-	String payload; 
-	String tipo;
-	String relacion;
-	Boolean bool;
-	Database myDatabase; 
-	HashMap<String, String> queryValues;
-	TextView txt; 
-	TableLayout table_layout;
-	TextView relation;
-	TextView pObject;
-	TextView object;
-	TextView timestamp;
-	TextView sync;
-	SharedPreferences prefs ;
+	private StringBuffer myText;
+	private byte statusByte;
+	private String payload; 
+	private String tipo;
+	private String relacion;
+	private Boolean bool;
+	private Database myDatabase; 
+	private HashMap<String, String> queryValues;
+	private TextView txt; 
+	private TableLayout table_layout;
+	private TextView relation;
+	private TextView pObject;
+	private TextView object;
+	private TextView timestamp;
+	private TextView sync;
+	private SharedPreferences prefs ;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
