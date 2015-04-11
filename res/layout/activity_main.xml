@@ -19,59 +19,85 @@
             android:paddingTop="@dimen/activity_vertical_margin"
             tools:context="com.example.nfc_writing.MainActivity" >
 
-            <Button
-                android:id="@+id/WriteTag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/ReadTag"
-                android:layout_below="@+id/ReadTag"
-                android:layout_marginTop="16dp"
-                android:text="@string/Write"
-                android:width="250dp" />
-
-            <Button
-                android:id="@+id/ReadTag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/FielText"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="25dp"
-                android:text="@string/Read"
-                android:width="250dp" />
-
             <TextView
                 android:id="@+id/FielText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignRight="@+id/Quit"
                 android:layout_marginTop="22dp"
                 android:ems="10"
-                android:paddingLeft="20dp"
                 android:text="@string/Choose"
                 android:textColor="@android:color/black"
                 android:textSize="15sp" />
 
-            <Button
-                android:id="@+id/CreateIdentifier"
+            <TableLayout
+                android:id="@+id/tableLayout1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/WriteTag"
-                android:layout_alignRight="@+id/WriteTag"
-                android:layout_below="@+id/WriteTag"
-                android:layout_marginTop="16dp"
-                android:text="@string/create_identifier"
-                android:width="250dp" />
+                android:layout_alignLeft="@+id/FielText"
+                android:layout_below="@+id/FielText"
+                android:stretchColumns="*" >
+
+                <TableRow
+                    android:paddingBottom="10sp"
+                    android:paddingTop="10sp" >
+
+                    <Button
+                        android:id="@+id/ReadTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/selectormain"
+                        android:drawableLeft="@drawable/lupa"
+                        android:drawablePadding="35sp"
+                        android:gravity="center|left"
+                        android:text="@string/Read" />
+                </TableRow>
+
+                <TableRow android:paddingBottom="10sp" >
+
+                    <Button
+                        android:id="@+id/WriteTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/selectormain"
+                        android:drawableLeft="@drawable/boli"
+                        android:drawablePadding="35sp"
+                        android:gravity="center|left"
+                        android:text="@string/Write" />
+                </TableRow>
+
+                <TableRow android:paddingBottom="10sp" >
+
+                    <Button
+                        android:id="@+id/CreateIdentifier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/selectormain"
+                        android:drawableLeft="@drawable/relaciones"
+                        android:drawablePadding="35sp"
+                        android:gravity="center|left"
+                        android:text="@string/create_identifier" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/espacio"
+                    android:paddingBottom="20sp" >
+                </TableRow>
+            </TableLayout>
 
             <Button
                 android:id="@+id/Quit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/CreateIdentifier"
+                android:layout_alignLeft="@+id/tableLayout1"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="20dp"
-                android:minWidth="250dp"
+                android:layout_alignRight="@+id/tableLayout1"
+                android:layout_marginBottom="19dp"
+                android:background="@drawable/selectormain"
+                android:drawableLeft="@drawable/atras"
+                android:drawablePadding="70sp"
+                android:gravity="center|left"
                 android:text="@string/Quit" />
+
         </RelativeLayout>
     </LinearLayout>
 

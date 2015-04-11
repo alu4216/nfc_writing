@@ -14,37 +14,68 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="20sp"
             android:orientation="vertical" >
 
-            <Button
+            <ImageButton
                 android:id="@+id/Back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/WriteUrl"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="46dp"
-                android:text="@string/MainMenu"
-                android:width="250dp" />
+                android:layout_alignParentRight="true"
+                android:background="@drawable/selectormain"
+                android:contentDescription="@+id/Back"
+                android:src="@drawable/atras" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/WriteText"
+                android:background="@drawable/linemenuwrite" />
+
+            <View
+                android:id="@+id/view1"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/WriteUrl"
+                android:background="@drawable/linemenuwrite" />
 
             <Button
                 android:id="@+id/WriteUrl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/view2"
+                android:background="@drawable/selectormenuwritebuttom"
+                android:drawableLeft="@drawable/writeurl"
+                android:drawableRight="@drawable/flecha"
+                android:text="@string/WriteUrl" />
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
-                android:text="@string/WriteUrl"
-                android:width="250dp" />
+                android:background="@drawable/linemenuwrite" />
 
             <Button
                 android:id="@+id/WriteText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/WriteUrl"
-                android:layout_below="@+id/WriteUrl"
-                android:layout_marginTop="14dp"
-                android:text="@string/WriteText"
-                android:width="250dp" />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/view3"
+                android:background="@drawable/selectormenuwritebuttom"
+                android:drawableLeft="@drawable/writetextplain"
+                android:drawableRight="@drawable/flecha"
+                android:text="@string/WriteText" />
         </RelativeLayout>
     </LinearLayout>
+
 </ScrollView>

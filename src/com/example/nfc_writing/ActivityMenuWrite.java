@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class ActivityMenuWrite extends ActionBarActivity {
 
@@ -16,7 +17,7 @@ public class ActivityMenuWrite extends ActionBarActivity {
 		setContentView(R.layout.activity_writemenu);
 
 		final Button writeUrl = (Button)findViewById(R.id.WriteUrl);
-		final Button quitButton = (Button)findViewById(R.id.Back);
+		final ImageButton quitButton = (ImageButton)findViewById(R.id.Back);
 		final Button writeText = (Button)findViewById(R.id.WriteText);
 		
 		writeUrl.setOnClickListener(new OnClickListener() { //Select write of URL or Plain TEXT

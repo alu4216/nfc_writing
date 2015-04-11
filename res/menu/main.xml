@@ -12,10 +12,5 @@
         android:orderInCategory="100"
         android:title="@string/refresh"
         app:showAsAction="always"/>
-    <item
-        android:id="@+id/gcm_syncs"
-        android:orderInCategory="100"
-        android:title="@string/reciver"
-        app:showAsAction="never"/>
-
+   
 </menu>

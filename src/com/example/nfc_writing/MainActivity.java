@@ -168,9 +168,6 @@ public class MainActivity extends ActionBarActivity {
 			Intent intent = new Intent(MainActivity.this,ActivityShowSetting.class);
 			startActivity(intent);
 			return true;
-		case R.id.gcm_syncs:
-			initGCM();
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
