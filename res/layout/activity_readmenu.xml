@@ -13,16 +13,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <Button
-                android:id="@+id/Quit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="112dp"
-                android:text="@string/Quit" />
+            android:layout_height="match_parent"
+            android:layout_margin="20sp" >
 
             <TextView
                 android:id="@+id/FielText"
@@ -30,14 +22,51 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="135dp"
+                android:layout_marginTop="32dp"
                 android:ems="10"
-                android:paddingLeft="95dp"
                 android:text="@string/Touch"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="normal" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
+                android:layout_alignLeft="@+id/FielText"
+                android:layout_alignRight="@+id/FielText"
+                android:layout_below="@+id/FielText"
+                android:layout_marginTop="26dp"
+                android:background="#e1eff2"
+                android:contentDescription="@+id/imageView1"
+                android:src="@drawable/tagphone" />
+
+            <ImageButton
+                android:id="@+id/Back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/imageView1"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/imageView1"
+                android:background="@drawable/selectormain"
+                android:contentDescription="@+id/Back"
+                android:src="@drawable/atras" />
+
+            <TextView
+                android:id="@+id/FielText1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/imageView1"
+                android:layout_marginTop="10sp"
+                android:ems="10"
+                android:text="@string/Touch2"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+
         </RelativeLayout>
+
     </LinearLayout>
 
 </ScrollView>

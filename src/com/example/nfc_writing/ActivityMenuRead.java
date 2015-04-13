@@ -9,7 +9,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class ActivityMenuRead extends ActionBarActivity {
@@ -19,7 +19,7 @@ public class ActivityMenuRead extends ActionBarActivity {
 		setContentView(R.layout.activity_readmenu);
 		//Intent intent = new Intent(ActivityMenuRead.this,ActivityReadText.class);
 		//startActivity(intent);
-		final Button quitButton = (Button)findViewById(R.id.Quit);
+		final ImageButton quitButton = (ImageButton)findViewById(R.id.Back);
 		quitButton.setOnClickListener(new OnClickListener() {
 
 			@Override
