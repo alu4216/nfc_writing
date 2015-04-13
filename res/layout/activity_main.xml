@@ -19,6 +19,16 @@
             android:paddingTop="@dimen/activity_vertical_margin"
             tools:context="com.example.nfc_writing.MainActivity" >
 
+            <TextView
+                android:id="@+id/FielText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:ems="10"
+                android:text="@string/Choose"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
             <TableLayout
                 android:id="@+id/tableLayout1"
                 android:layout_width="wrap_content"
@@ -87,18 +97,6 @@
                 android:drawablePadding="70sp"
                 android:gravity="center|left"
                 android:text="@string/Quit" />
-
-            <TextView
-                android:id="@+id/FielText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="22dp"
-                android:ems="10"
-                android:text="@string/Choose"
-                android:textColor="@android:color/black"
-                android:textSize="15sp" />
 
         </RelativeLayout>
     </LinearLayout>

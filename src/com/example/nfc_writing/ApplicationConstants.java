@@ -5,7 +5,7 @@ public class ApplicationConstants {
 	// Php Application URL to store Reg ID created
 	static final String APP_SERVER_URL = "http://192.168.0.13:80/nfc/gcm.php?shareRegId=true";
 	// Google Project Number
-	static final String GOOGLE_PROJ_ID = "309830543870";
+	static final String GOOGLE_PROJ_ID = "YOUR PROYECT ID";
 	// Message Key
 	static final String MSG_KEY = "m";
 

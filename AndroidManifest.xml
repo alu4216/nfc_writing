@@ -64,14 +64,12 @@
         <activity
             android:name=".ActivityWriteUrl"
             android:label="@string/title_activity_WriteUrl"
-            android:parentActivityName="com.example.nfc_writing.ActivityMenuWrite"
-            android:screenOrientation="portrait" >
+            android:parentActivityName="com.example.nfc_writing.ActivityMenuWrite" >
         </activity>
         <activity
             android:name=".ActivityWriteText"
             android:label="@string/title_activity_WriteText"
-            android:parentActivityName="com.example.nfc_writing.ActivityMenuWrite"
-            android:screenOrientation="portrait" >
+            android:parentActivityName="com.example.nfc_writing.ActivityMenuWrite" >
         </activity>
         <activity
             android:name=".ActivityMenuRead"

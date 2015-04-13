@@ -3,7 +3,6 @@ import java.nio.charset.Charset;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -15,8 +14,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ActivityWriteUrl extends CommonMethods {
@@ -34,18 +31,15 @@ public class ActivityWriteUrl extends CommonMethods {
 		final Button write = (Button)findViewById(R.id.Save);
 		final EditText etxt = (EditText)findViewById(R.id.TxtNombre);
 		final TextView txt = (TextView)findViewById(R.id.FielText2);
-		final ImageButton quitButton = (ImageButton)findViewById(R.id.Back);
-		final ImageView image = (ImageView)findViewById(R.id.imageView1);
-		
+		final Button quitButton = (Button)findViewById(R.id.Back);
+
 		write.setOnClickListener(new OnClickListener() {		
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 
-				urlAddress = etxt.getText().toString();	
-				txt.setText("Storing http://www."+urlAddress+" will begin when you tap an NFC tag");
-				image.setBackgroundColor(Color.parseColor("#e1eff2"));
-				image.setImageResource(getResources().getIdentifier("tagphone","drawable" ,getPackageName()));
+				urlAddress = etxt.getText().toString();
+				txt.setText("Touch NFC tag to write http://www."+urlAddress);
 				setupForenground();
 				//setupNdef();
 			}

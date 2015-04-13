@@ -14,17 +14,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="20sp"
             android:orientation="vertical" >
-
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="100sp"
-                android:layout_height="100sp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/FielText2"
-                android:contentDescription="@+id/imageView1" />
 
             <TextView
                 android:id="@+id/FielText"
@@ -32,33 +22,28 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="23dp"
+                android:layout_toLeftOf="@string/action_settings"
                 android:ems="10"
+                android:paddingLeft="20dp"
                 android:text="@string/wText"
                 android:textColor="@android:color/black"
                 android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/Save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/TxtNombre"
-                android:layout_below="@+id/TxtNombre"
-                android:background="@drawable/selectormain"
-                android:text="@string/Save" />
 
             <EditText
                 android:id="@+id/TxtNombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:layout_below="@+id/FielText"
-                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
                 android:ems="10"
                 android:inputType="textUri"
                 android:lineSpacingExtra="2dp"
-                android:textSize="13sp" >
-
-                <requestFocus />
-            </EditText>
+                android:paddingLeft="20dp"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/FielText2"
@@ -66,22 +51,33 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/Save"
-                android:layout_marginTop="15sp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="18dp"
                 android:ems="10"
+                android:paddingLeft="20dp"
                 android:textColor="@android:color/black"
                 android:textSize="15sp" />
 
-            <ImageButton
+            <Button
+                android:id="@+id/Save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/TxtNombre"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/Save" />
+
+            <Button
                 android:id="@+id/Back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/selectormain"
-                android:contentDescription="@+id/Back"
-                android:src="@drawable/atras" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="49dp"
+                android:text="@string/MainMenu"
+                android:width="180dp" />
         </RelativeLayout>
     </LinearLayout>
-
 </ScrollView>
