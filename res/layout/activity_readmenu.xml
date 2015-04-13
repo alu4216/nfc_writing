@@ -1,28 +1,56 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ScrollView01"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:scrollbars="none" >
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:layout_margin="20sp" >
 
-            <Button
-                android:id="@+id/Quit"
+            <TextView
+                android:id="@+id/FielText1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/imageView1"
+                android:layout_marginTop="10sp"
+                android:ems="10"
+                android:text="@string/Touch2"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/FielText"
+                android:layout_marginTop="20sp"
+                android:background="#e1eff2"
+                android:contentDescription="@+id/imageView1"
+                android:src="@drawable/tagphone" />
+
+            <ImageButton
+                android:id="@+id/Back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="112dp"
-                android:text="@string/Quit" />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/selectormain"
+                android:contentDescription="@+id/Back"
+                android:maxWidth="5sp"
+                android:src="@drawable/atras" />
 
             <TextView
                 android:id="@+id/FielText"
@@ -30,9 +58,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="135dp"
+                android:layout_marginTop="20sp"
                 android:ems="10"
-                android:paddingLeft="95dp"
                 android:text="@string/Touch"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
