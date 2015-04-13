@@ -35,7 +35,7 @@ public class ActivityIdentifier extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_identifier);
 
-		//Objecto of activity
+		//Objecto of activity 
 		final TextView ftxt= (TextView)findViewById(R.id.FielText);
 		final TextView ftxt1= (TextView)findViewById(R.id.FielText1); 
 		final Button save = (Button)findViewById(R.id.save);
