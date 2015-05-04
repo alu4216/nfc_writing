@@ -60,16 +60,14 @@ public class ActivityReadText extends CommonMethods {
 		int orientation = getResources().getConfiguration().orientation;
 
 
-		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) // Read NFC card
-		{
+		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())){ // Read NFC card
+		
 
 			NdefMessage[] message = getNdefMessages(getIntent());
 
-			for ( int i = 0; i< message.length; i++)
-			{
+			for ( int i = 0; i< message.length; i++) {
 				myText = myText.append("Message" +(1+i)+ " \n");
-				for(int j=0; j<message[0].getRecords().length;j++)
-				{
+				for(int j=0; j<message[0].getRecords().length;j++) {
 					NdefRecord record = message[i].getRecords()[j];
 					statusByte = record.getPayload()[0];
 					int languageCodeLength = statusByte & 0x3F;
@@ -79,15 +77,13 @@ public class ActivityReadText extends CommonMethods {
 
 					int isUTF8 = statusByte-languageCodeLength;
 
-					if(isUTF8 == 0x00)
-					{
+					if(isUTF8 == 0x00) {
 						myText.append((j+1) + "th. Record is UTF-8\n");
 
 						payload = new String( record.getPayload(), 1+languageCodeLength, record.getPayload().length-1-languageCodeLength, Charset.forName("UTF-8"));
 
 					} 
-					else if (isUTF8==-0x80)
-					{
+					else if (isUTF8==-0x80) {
 						myText.append((j+1) + "th. Record is UTF-16\n"); 
 						payload = new String( record.getPayload(), 1+languageCodeLength, record.getPayload().length-1-languageCodeLength, Charset.forName("UTF-16")); 
 
@@ -99,16 +95,13 @@ public class ActivityReadText extends CommonMethods {
 				} 
 			} 
 
-			if(orientation == 1) //Insertion in the database
-			{
+			if(orientation == 1) { //Insertion in the database
 				queryValues = new HashMap<String, String>();
-				if(bool == true)//If grouping is active
-				{
+				if(bool == true) {//If grouping is active
 					tipo = prefs.getString("Lmultiple", "vacio");
 					relacion = prefs.getString("Relacion","vacio");
 
-					if(prefs.getBoolean("OPactive", false)==true)//Inserting the parent object
-					{
+					if(prefs.getBoolean("OPactive", false)==true) {//Inserting the parent object
 						SharedPreferences.Editor editor = prefs.edit();
 						editor.putBoolean("OPactive", false);
 						editor.putString("OPadre",payload);
@@ -123,8 +116,8 @@ public class ActivityReadText extends CommonMethods {
 
 
 					}
-					else //Inserting the child object
-					{
+					else { //Inserting the child object
+					
 
 						Long tsLong = System.currentTimeMillis()/1000;
 						String timestamp = tsLong.toString();
@@ -142,15 +135,14 @@ public class ActivityReadText extends CommonMethods {
 
 					}
 				}
-				else //If grouping is not active
-				{
+				else { //If grouping is not active
 					queryValues.put("objeto",payload);
 					myDatabase.insert(queryValues,"Objetos");
 					showtable(1, null,null, payload, null,null);
 				}
 			}
-			else //Search the database
-			{	
+			else { //Search the database
+				
 				SQLiteDatabase db = myDatabase.getWritableDatabase();
 
 				String[] campos = new String[] {"*"};
@@ -180,8 +172,8 @@ public class ActivityReadText extends CommonMethods {
 		super.onConfigurationChanged(newConfig);
 	}
 
-	private void showtable(int tipo_,String relacion_,String Ppayload,String payload,String tiempo, String sincro)
-	{
+	private void showtable(int tipo_,String relacion_,String Ppayload,String payload,String tiempo, String sincro) {
+	
 
 		TableRow  row = new TableRow(this);
 		row.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
@@ -189,8 +181,8 @@ public class ActivityReadText extends CommonMethods {
 		layoutParams.setMargins(1, 1, 1, 1);
 		TextView [] tv = new TextView[5];
 	
-		for(int i=0; i< 5; i++)
-		{
+		for(int i=0; i< 5; i++) {
+		
 			tv[i] = new TextView(this);
 			tv[i].setText(" ");
 			tv[i].setLayoutParams(layoutParams);
@@ -203,24 +195,22 @@ public class ActivityReadText extends CommonMethods {
 
 		switch (tipo_) {
 		case 0:
-
 			tv[0].setText(relacion);
 			row.addView(tv[0]);
 			tv[1].setText(Ppayload);
 			row.addView(tv[1]);
 
-			if(payload==null)
-			{
-				txt.setText("Insert new Relationship");
+			if(payload==null) {
+				txt.setText("Inserted new Relation");
 				tv[2].setText(tipo);
 				row.addView(tv[2]);
 				object.setText("Interaction");
 				timestamp.setVisibility(TextView.INVISIBLE);
 				sync.setVisibility(TextView.INVISIBLE);
 			}
-			else
-			{
-				txt.setText("Insert new objects to relationship \nRelationShip:"+relacion+","+prefs.getString("OPadre", "vacio")+","+tipo);
+			else {
+			
+				txt.setText("Inserted new object in the relation \nRelation:"+relacion+","+prefs.getString("OPadre", "vacio")+","+tipo);
 				tv[2].setText(payload);
 				row.addView(tv[2]);
 				tv[3].setText(tiempo);
@@ -231,7 +221,7 @@ public class ActivityReadText extends CommonMethods {
 			table_layout.addView(row);
 			break;
 		case 1:
-			txt.setText("Only insert Objects");
+			txt.setText("Only inserted Objects");
 
 			relation.setText("Object");
 			tv[0].setText(payload);
@@ -243,7 +233,7 @@ public class ActivityReadText extends CommonMethods {
 			table_layout.addView(row);
 			break;
 		case 2:
-			txt.setText("Search results with object:"+payload);
+			txt.setText("Search results with object:"+Ppayload);
 			
 			tv[0].setText(relacion_);
 			row.addView(tv[0]);

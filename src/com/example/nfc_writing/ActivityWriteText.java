@@ -43,7 +43,7 @@ public class ActivityWriteText extends CommonMethods { //CommonMethods is a clas
 			public void onClick(View v) {
 				// TODO Auto-generated method stub	
 				data = etxt.getText().toString();
-				txt.setText("Storing  will begin when you tap an NFC tag");
+				txt.setText("Storing  will begin when you touch the NFC tag");
 				image.setBackgroundColor(Color.parseColor("#e1eff2"));
 				image.setImageResource(getResources().getIdentifier("tagphone","drawable" ,getPackageName()));
 				setupForenground();
@@ -63,8 +63,8 @@ public class ActivityWriteText extends CommonMethods { //CommonMethods is a clas
 		}); 
 
 	}
-	private void setupForenground() //Set up forengroud
-	{
+	private void setupForenground() {//Set up forengroud
+	
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 		IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED); 
@@ -73,22 +73,19 @@ public class ActivityWriteText extends CommonMethods { //CommonMethods is a clas
 	}
 
 	@Override
-	public void onPause()
-	{
+	public void onPause() {
 		super.onPause();
 		if(mNfcAdapter != null)
 			mNfcAdapter.disableForegroundDispatch(this);
 	}
 	@Override
-	public void onResume()//prioritize activity in the foreground
-	{
+	public void onResume() {//prioritize activity in the foreground
 		super.onResume();
 		if(mNfcAdapter != null)
 			mNfcAdapter.enableForegroundDispatch(this, mPendingIntent,mFilters,mTechLists);
 	}
 	@Override //Set up the NDEF message
-	public void onNewIntent(Intent intent) 
-	{ 
+	public void onNewIntent(Intent intent) {
 		Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG); 
 		Locale locale= new Locale("en","US"); 
 		byte[] langBytes = locale.getLanguage().getBytes(Charset.forName("US-ASCII")); 

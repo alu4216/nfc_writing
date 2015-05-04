@@ -177,7 +177,7 @@ public class Database extends SQLiteOpenHelper {
 	/*
 	 * Compose JSON out of SQLite records
 	 */
-	public String composeJSONfromSQLite(){
+	public String composeJSONfromSQLite() {
 		ArrayList<HashMap<String, String>> wordList;
 		wordList = new ArrayList<HashMap<String, String>>();
 		String selectQuery = "SELECT  * FROM Log where sincro ='0'";
@@ -200,7 +200,7 @@ public class Database extends SQLiteOpenHelper {
 		//Use GSON to serialize Array List to JSON
 		return gson.toJson(wordList);
 	}
-	public int dbSyncCount(){
+	public int dbSyncCount() {
 		int count = 0;
 		String selectQuery = "SELECT * FROM Log where sincro ='0' ";
 		SQLiteDatabase database = this.getWritableDatabase();
@@ -213,7 +213,7 @@ public class Database extends SQLiteOpenHelper {
 	/*
 	 * Update Sync status against 
 	 */
-	public void updateSyncStatus(String relacion, String objetoPadre, String objeto, String interaccion, String tiempo){
+	public void updateSyncStatus(String relacion, String objetoPadre, String objeto, String interaccion, String tiempo) {
 		SQLiteDatabase database = this.getWritableDatabase();    
 
 		String query = new String("Update Log set sincro = '1' where relacion='"+relacion+"'AND objetoPadre='"+objetoPadre+"'" +

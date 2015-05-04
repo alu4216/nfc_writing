@@ -26,14 +26,12 @@ public class ActivityReadUrl extends CommonMethods {
 		final Button urlButton = (Button)findViewById(R.id.Open);
 		final Button quitButton = (Button)findViewById(R.id.Back);
 
-		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) //Read NFC card
-		{
+		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {//Read NFC card
+		
 
 			NdefMessage[] message = getNdefMessages(getIntent());
-			for ( int i = 0; i< message.length; i++)
-			{
-				for ( int j = 0; j< message[0].getRecords().length; j++)
-				{
+			for ( int i = 0; i< message.length; i++) {
+				for ( int j = 0; j< message[0].getRecords().length; j++) {
 					NdefRecord record = message[i].getRecords()[j];
 					payload = new String (record.getPayload(),1,record.getPayload().length-1,Charset.forName("UTF-8"));
 					payloadHeader = record.getPayload()[0];
@@ -45,17 +43,14 @@ public class ActivityReadUrl extends CommonMethods {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					if(payloadHeader == 0x01) //Open URL
-					{
+					if(payloadHeader == 0x01) {//Open URL
 						Intent data = new Intent();
 						data.setAction(Intent.ACTION_VIEW);
 						data.setData(Uri.parse("http://www."+ payload));
-						try
-						{
+						try {
 							startActivity(data);
 						}
-						catch(ActivityNotFoundException e)
-						{
+						catch(ActivityNotFoundException e) {
 							return;
 						}
 					}

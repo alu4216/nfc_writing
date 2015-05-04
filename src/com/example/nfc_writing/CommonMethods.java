@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 public class CommonMethods extends ActionBarActivity {
 
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -29,32 +29,26 @@ public class CommonMethods extends ActionBarActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
-	
+
 	//Read to Tag
-	protected NdefMessage[] getNdefMessages(Intent intent)
-	{
+	protected NdefMessage[] getNdefMessages(Intent intent) {
 		NdefMessage[] message = null;
-		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction()))
-		{
+		if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
 			Parcelable[] rawmessage = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-			if(rawmessage != null)
-			{
+			if(rawmessage != null) {
 				message = new NdefMessage[rawmessage.length];
-				for( int i = 0; i < rawmessage.length; i++)
-				{
+				for( int i = 0; i < rawmessage.length; i++) {
 					message[i]= (NdefMessage) rawmessage[i];
 				}
 			}
-			else
-			{
+			else {
 				byte[] empty = new byte [] {};
 				NdefRecord record = new NdefRecord(NdefRecord.TNF_UNKNOWN,empty,empty,empty);
 				NdefMessage msg = new NdefMessage(new NdefRecord[]{record});
 				message = new NdefMessage[]{msg};
 			}
 		}
-		else
-		{
+		else {
 			Log.d("","Unknow intent.");
 			finish();
 		}
@@ -62,22 +56,17 @@ public class CommonMethods extends ActionBarActivity {
 
 	}
 	//Write to tag
-	protected boolean writeNdefMessageToTag(NdefMessage message, Tag detectedTag) 
-	{
+	protected boolean writeNdefMessageToTag(NdefMessage message, Tag detectedTag) {
 		int size = message.toByteArray().length;
-		try
-		{
+		try {
 			Ndef ndef = Ndef.get(detectedTag);
-			if(ndef != null)
-			{
+			if(ndef != null) {
 				ndef.connect();
-				if(!ndef.isWritable())
-				{
+				if(!ndef.isWritable()) {
 					Toast.makeText(this,"Tag Read Only",Toast.LENGTH_SHORT).show();
 					return false;
 				}
-				if(ndef.getMaxSize()< size)
-				{
+				if(ndef.getMaxSize()< size) {
 					Toast.makeText(this,"Data cannot writtent to tag. Tag capacity is " + ndef.getMaxSize(), Toast.LENGTH_SHORT).show();
 					return false;
 				}
@@ -86,39 +75,30 @@ public class CommonMethods extends ActionBarActivity {
 				Toast.makeText(this,"Message is written tag", Toast.LENGTH_SHORT).show();
 				return true;
 			}
-			else
-			{
+			else {
 				NdefFormatable ndefFormat = NdefFormatable.get(detectedTag);
-				if(ndefFormat != null)
-				{
-					try 
-					{
+				if(ndefFormat != null) {
+					try {
 						ndefFormat.connect();
 						ndefFormat.format(message);
 						ndefFormat.close();
 						Toast.makeText(this,"The data is written to tag", Toast.LENGTH_SHORT).show();
 						return true;
-					}catch (IOException e)
-					{
+					}catch (IOException e) {
 						Toast.makeText(this,"Fail to forma tag", Toast.LENGTH_SHORT).show();
 						return false;
 					}
 				}
-				else
-				{
+				else {
 					Toast.makeText(this,"NDEF is not supported", Toast.LENGTH_SHORT).show();
 					return false;
 				}
 			}
 
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			Toast.makeText(this,"Write operation is failed", Toast.LENGTH_SHORT).show();
 			return false;
 		}
 	}
-
-
-
 }

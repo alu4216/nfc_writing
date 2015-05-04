@@ -67,15 +67,13 @@ public class MainActivity extends ActionBarActivity {
 
 
 		/*NfcAdapter mNfcAdapter=NfcAdapter.getDefaultAdapter(this);
-		if (mNfcAdapter == null) 
-		{ 
+		if (mNfcAdapter == null) { 
 			// Stop here, we definitely need NFC
 			Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		} 
-		else
-		{
+		else {
 			Toast.makeText(this, "This device support NFC.", Toast.LENGTH_LONG).show();
 
 		}*/
@@ -212,7 +210,7 @@ public class MainActivity extends ActionBarActivity {
 		});
 	}
 	//Update Database
-	public void updateSQLite(String response){		
+	public void updateSQLite(String response) {		
 		ArrayList<HashMap<String, String>> usersynclist;
 		usersynclist = new ArrayList<HashMap<String, String>>();
 		// Create GSON object
@@ -222,7 +220,7 @@ public class MainActivity extends ActionBarActivity {
 			JSONArray arr = new JSONArray(response);
 			System.out.println("------TRAER-----------");
 			System.out.println(arr.length());
-			if(arr.length() != 0){
+			if(arr.length() != 0) {
 				for (int i = 0; i < arr.length(); i++) {
 					// Get JSON object
 					JSONObject obj = (JSONObject) arr.get(i);
@@ -243,13 +241,11 @@ public class MainActivity extends ActionBarActivity {
 					queryValues.put("tiempo", obj.get("tiempo").toString());
 
 					// Insert or delete data into SQLite DB
-					if(obj.getInt("sincro") == 2)
-					{
+					if(obj.getInt("sincro") == 2) {
 						mydatabase.delete(queryValues, "Log");
 						queryValues.put("sincro", "3");
 					}
-					else
-					{
+					else {
 						queryValues.put("sincro", "1");
 						mydatabase.insert(queryValues,"Log");
 					}
@@ -274,8 +270,7 @@ public class MainActivity extends ActionBarActivity {
 		client.post("http://192.168.0.13:80/nfc/updatesyncsts.php", params, new AsyncHttpResponseHandler() {
 
 			@Override
-			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
-					Throwable arg3) {
+			public void onFailure(int arg0, Header[] arg1, byte[] arg2, Throwable arg3) {
 				// TODO Auto-generated method stub
 				prgDialog.hide();
 				Toast.makeText(getApplicationContext(), "Error Occured to inform the MysQL DB", Toast.LENGTH_LONG).show();
@@ -301,7 +296,7 @@ public class MainActivity extends ActionBarActivity {
 	/***************************************************************************************************************************
 	 * SQLite to MySql																										   *
 	 ***************************************************************************************************************************/
-	public void syncMySQLDBSQLite(){
+	public void syncMySQLDBSQLite() {
 
 		AsyncHttpClient client = new AsyncHttpClient();
 		RequestParams params = new RequestParams();
@@ -337,7 +332,7 @@ public class MainActivity extends ActionBarActivity {
 								JSONArray arr = new JSONArray(cadena);
 								System.out.println("------ENVIAR-----------");
 								System.out.println(arr.length());
-								for(int i=0; i<arr.length();i++){
+								for(int i=0; i<arr.length();i++) {
 									JSONObject obj = (JSONObject)arr.get(i);
 									System.out.println(obj.get("relacion"));
 									System.out.println(obj.get("objetoPadre"));
@@ -367,27 +362,22 @@ public class MainActivity extends ActionBarActivity {
 	/***************************************************************************************************************************
 	 * GMC																								   					   *
 	 ***************************************************************************************************************************/
-	void initGCM()
-	{
+	void initGCM() {
 		SharedPreferences prefs = getSharedPreferences("MyPreferences",Context.MODE_PRIVATE);
 		String registrationId = prefs.getString(REG_ID, "");
 		long expirationTime =prefs.getLong(PROPERTY_EXPIRATION_TIME, -1);
 		applicationContext = getApplicationContext();
-		
-		if (registrationId == "") 
-		{
+
+		if (registrationId == "") {
 			// Check if Google Play Service is installed in Device
 			// Play services is needed to handle GCM stuffs
-			if (checkPlayServices()) 
-			{
+			if (checkPlayServices()) {
 				// Register Device in GCM Server
 				registerInBackground();
 			}
 		}
-		else
-		{
-			if(System.currentTimeMillis() > expirationTime)
-			{
+		else {
+			if(System.currentTimeMillis() > expirationTime) {
 				/*try {
 					gcmObj.unregister();
 				} catch (IOException e) {
@@ -396,8 +386,7 @@ public class MainActivity extends ActionBarActivity {
 				}*/
 				registerInBackground();
 			}
-			else
-			{
+			else {
 				Log.e("MyTag","Sincronizado ya");
 			}
 		}

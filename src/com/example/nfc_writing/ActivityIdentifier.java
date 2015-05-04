@@ -57,13 +57,11 @@ public class ActivityIdentifier extends ActionBarActivity {
 
 		//Set text and check box
 		box.setChecked(prefs.getBoolean("Cbox", false));
-		if(prefs.getString("Lmultiple","vacio")!="vacio")
-		{
+		if(prefs.getString("Lmultiple","vacio")!="vacio") {
 			ftxt.setText("Last type of interaction:"+prefs.getString("Lmultiple","No exist"));
 		}
 
-		if(box.isChecked())
-		{
+		if(box.isChecked()) {
 			editor.putBoolean("Cbox", true);
 			add_delete.setText("Del");
 			ftxt1.setText("Delete Relation-Interaction");
@@ -94,28 +92,22 @@ public class ActivityIdentifier extends ActionBarActivity {
 				// TODO Auto-generated method stub
 				Cursor c = db.rawQuery("SELECT * FROM Conf_spinner WHERE interaccion='"+interaction.getText().toString()+"'", null);
 
-				if(box.isChecked())					
-				{
+				if(box.isChecked())	{
 
-					if(c.getCount() > 0)
-					{
+					if(c.getCount() > 0) {
 						queryValues.clear();
 						queryValues.put("interaccion",interaction.getText().toString());
 						myDatabase.delete(queryValues,"Conf_spinner");
 						myDatabase.close();	
 						reiniciar();
 					}
-					else
-					{
+					else {
 						showmessage(2);
 					}
 				}
-				else
-				{	
+				else {	
 
-
-					if(c.getCount() ==0)
-					{
+					if(c.getCount() ==0) {
 						queryValues.clear();
 						queryValues.put("relacion",relation.getText().toString());
 						queryValues.put("interaccion",interaction.getText().toString());
@@ -125,8 +117,7 @@ public class ActivityIdentifier extends ActionBarActivity {
 						myDatabase.close();	
 						reiniciar();	
 					}
-					else
-					{
+					else {
 						showmessage(1);
 					}
 
@@ -187,14 +178,12 @@ public class ActivityIdentifier extends ActionBarActivity {
 				// TODO Auto-generated method stub
 
 
-				if(box.isChecked())
-				{
+				if(box.isChecked()) {
 					editor.putBoolean("Cbox", true);
 					add_delete.setText("Del");
 					ftxt1.setText("Delete Relation-Interaction");
 				}
-				else
-				{
+				else {
 					editor.putBoolean("Cbox",false);
 					add_delete.setText("Add");
 					ftxt1.setText("Create Relation-Interaction");
@@ -204,8 +193,7 @@ public class ActivityIdentifier extends ActionBarActivity {
 			}
 		});
 	}
-	private void showmessage(int index) //Show messaging 
-	{
+	private void showmessage(int index) { //Show messaging 
 		switch(index)
 		{
 		case 0: 
@@ -244,9 +232,6 @@ public class ActivityIdentifier extends ActionBarActivity {
 		startActivity(intent);
 		finish();
 	}
-
-
-
 
 }
 

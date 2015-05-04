@@ -36,8 +36,7 @@ public class ActivityShowDB extends ActionBarActivity {
 			row.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
 			for (int j = 0; j < cols; j++) {
 
-				if(j!=3)
-				{
+				if(j!=3) {
 					LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 					layoutParams.setMargins(1, 1, 1, 1);
 					TextView tv = new TextView(this);
@@ -48,8 +47,6 @@ public class ActivityShowDB extends ActionBarActivity {
 					tv.setText(c.getString(j));
 					tv.setTextColor(Color.BLACK);
 					row.addView(tv);
-
-
 				}
 			}
 			c.moveToNext();

@@ -32,8 +32,8 @@ public class ActivityShowSetting extends ActionBarActivity {
 				new AdaptadorTitulares(this, datos);
 		lstOpciones.setAdapter(adaptador);
 	}
-	private void rellenar() //Fill options
-	{
+	private void rellenar() {//Fill options
+	
 		WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
 		WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
 		int ip = wifiInfo.getIpAddress();
@@ -53,11 +53,9 @@ public class ActivityShowSetting extends ActionBarActivity {
 	
 	public String getLocalIpAddress() { //Get Ip address
         try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface
-                    .getNetworkInterfaces(); en.hasMoreElements();) {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                 NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf
-                        .getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress()) {
                         return inetAddress.getHostAddress().toString();
@@ -91,8 +89,7 @@ public class ActivityShowSetting extends ActionBarActivity {
 			View item = convertView;
 			ViewHolder holder;
 
-			if(item == null)
-			{
+			if(item == null) {
 				LayoutInflater inflater = LayoutInflater.from(getContext());
 				item = inflater.inflate(R.layout.listitem, null);
 				holder = new ViewHolder();
@@ -101,14 +98,11 @@ public class ActivityShowSetting extends ActionBarActivity {
 
 				item.setTag(holder);
 			}
-			else
-			{
+			else {
 				holder = (ViewHolder)item.getTag();
 			}
-
 			holder.titulo.setText(datos[position].getTitulo());
 			holder.subtitulo.setText(datos[position].getSubtitulo());
-
 			return(item);
 		}
 	}

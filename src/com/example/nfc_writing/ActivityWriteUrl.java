@@ -61,8 +61,7 @@ public class ActivityWriteUrl extends CommonMethods {
 		}); 
 	}
 
-	private void setupForenground() 
-	{
+	private void setupForenground() {
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 		IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED); 
@@ -71,15 +70,13 @@ public class ActivityWriteUrl extends CommonMethods {
 	}
 
 	@Override
-	public void onPause()
-	{
+	public void onPause() {
 		super.onPause();
 		if(mNfcAdapter != null)
 			mNfcAdapter.disableForegroundDispatch(this);
 	}
 	@Override
-	public void onResume()
-	{
+	public void onResume() {
 		super.onResume();
 
 		if(mNfcAdapter != null)
@@ -87,8 +84,7 @@ public class ActivityWriteUrl extends CommonMethods {
 
 	}
 	@Override //Set up the NDEF message
-	public void onNewIntent(Intent intent) 
-	{ 
+	public void onNewIntent(Intent intent) { 
 		Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG); 
 		byte[] uriField = urlAddress.getBytes(Charset.forName("US-ASCII"));
 		byte[] payload = new byte[uriField.length + 1]; 

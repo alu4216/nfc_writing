@@ -34,7 +34,7 @@ public class ActivityMenuRead extends ActionBarActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) { //Select grouping mode through volume button
 
 		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-		switch(keyCode){
+		switch(keyCode) {
 
 		case KeyEvent.KEYCODE_VOLUME_DOWN:
 			SharedPreferences prefs = getSharedPreferences("MyPreferences",Context.MODE_PRIVATE);
@@ -42,15 +42,13 @@ public class ActivityMenuRead extends ActionBarActivity {
 			String txt = prefs.getString("Lmultiple", "vacio");
 			SharedPreferences.Editor editor = prefs.edit();
 
-			if(bool == true)
-			{
+			if(bool == true) {
 				editor.putBoolean("LMactive", false);
 				editor.commit();
 				Toast.makeText(this,"Disable group reading with:"+txt, Toast.LENGTH_SHORT).show();
 				v.vibrate(500);
 			}
-			else
-			{
+			else {
 				editor.putBoolean("LMactive", true);
 				editor.commit();
 				Toast.makeText(this,"Activated group reading with:"+txt, Toast.LENGTH_SHORT).show();
